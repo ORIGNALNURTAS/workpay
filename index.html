@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkPay</title>
+<meta name="theme-color" content="#0E1116">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WorkPay">
+<meta name="description" content="Жұмыс сағаттарын және жалақыны есептеу қосымшасы">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1116;
+    --card:#171B22;
+    --card-2:#1D222B;
+    --ink:#EDEFF3;
+    --ink-soft:#8B93A3;
+    --line:#262C36;
+    --day:#E8A94A;
+    --day-soft:rgba(232,169,74,0.14);
+    --night:#8C87F2;
+    --night-soft:rgba(140,135,242,0.16);
+    --danger:#E27871;
+    --danger-soft:rgba(226,120,113,0.14);
+    --radius:12px;
+    --font-ui:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(140,135,242,0.08), transparent),
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px) 0 0/100% 34px,
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-ui);
+    padding:28px 16px 60px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+
+  /* ---- Header / clock dial signature ---- */
+  header{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    margin-bottom:26px;
+  }
+  .dial{ flex-shrink:0; filter:drop-shadow(0 0 14px rgba(140,135,242,0.25)); }
+  h1{
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .sub{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---- Card ---- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.28);
+  }
+  .card h2{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+    font-weight:600;
+  }
+
+  /* ---- Form ---- */
+  form{ display:grid; gap:12px; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  label{
+    display:block;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+    font-weight:500;
+  }
+  input{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 10px;
+    font-family:var(--font-mono);
+    font-size:14px;
+    color:var(--ink);
+    background:var(--card-2);
+    color-scheme:dark;
+  }
+  input:focus{ outline:2px solid var(--night); outline-offset:1px; border-color:var(--night); }
+  .break-item{ display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+  .break-item label.chk{
+    display:flex; align-items:center; gap:6px;
+    font-family:var(--font-mono); font-size:12.5px;
+    border:1px solid var(--line); border-radius:8px;
+    padding:9px 10px; cursor:pointer; user-select:none;
+    color:var(--ink); flex:0 0 auto; margin:0; white-space:nowrap;
+    background:var(--card-2);
+  }
+  .break-item input[type=checkbox]{ width:auto; accent-color:var(--night); }
+  .break-select{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px 10px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink);
+    background:var(--card-2);
+    color-scheme:dark;
+  }
+  .break-select:disabled{ opacity:.4; }
+  button{
+    font-family:var(--font-ui);
+    font-weight:600;
+    font-size:14px;
+    border:none;
+    border-radius:9px;
+    padding:12px 16px;
+    cursor:pointer;
+    transition:transform .08s ease, background .15s ease;
+  }
+  .btn-primary{ background:var(--ink); color:#12151A; }
+  .btn-primary:hover{ background:#FFFFFF; }
+  .btn-primary:active{ transform:scale(.98); }
+  .btn-ghost{
+    background:var(--card-2); color:var(--ink); border:1px solid var(--line);
+  }
+  .btn-ghost:hover{ border-color:var(--night); color:var(--night); }
+  .btn-small{ padding:8px 12px; font-size:12.5px; }
+
+  /* ---- Month nav ---- */
+  .month-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .month-nav .arrow{
+    background:var(--card-2); border:1px solid var(--line); color:var(--ink);
+    width:32px; height:32px; border-radius:8px; font-size:15px;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .month-nav .arrow:hover{ border-color:var(--night); color:var(--night); }
+  .month-nav .label{
+    font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--ink);
+  }
+
+  /* ---- Goal progress ---- */
+  .goal-row{
+    display:flex; align-items:center; gap:8px; margin-top:16px; flex-wrap:wrap;
+  }
+  .goal-row input{ width:140px; }
+  .progress-track{
+    width:100%; height:8px; border-radius:6px; background:var(--card-2);
+    border:1px solid var(--line); overflow:hidden; margin-top:10px;
+  }
+  .progress-fill{
+    height:100%; border-radius:6px;
+    background:linear-gradient(90deg, var(--day), var(--night));
+    transition:width .3s ease;
+  }
+  .goal-label{
+    font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); margin-top:6px;
+  }
+  .plan-box{
+    margin-top:16px; padding-top:16px; border-top:1px solid var(--line);
+  }
+  .plan-row{ display:flex; gap:12px; margin-bottom:12px; }
+  .plan-result{
+    font-family:var(--font-mono); font-size:13px; color:var(--ink);
+    background:var(--card-2); border:1px solid var(--line); border-radius:9px;
+    padding:12px; line-height:1.6;
+  }
+  .plan-result .hl{ color:var(--night); font-weight:700; }
+  .plan-result .hl2{ color:var(--day); font-weight:700; }
+  .plan-result .warn{ color:var(--danger); }
+
+  /* ---- Chart ---- */
+  .chart-wrap{ width:100%; overflow-x:auto; }
+  .bar-label{ font-family:var(--font-mono); font-size:9px; fill:var(--ink-soft); }
+
+  /* ---- Entry action icons ---- */
+  .entry-actions{ display:flex; gap:2px; }
+  .icon-btn{
+    background:none; border:none; color:var(--ink-soft);
+    font-size:15px; cursor:pointer; padding:4px 6px; border-radius:6px;
+  }
+  .icon-btn:hover{ background:var(--night-soft); color:var(--night); }
+  .icon-btn.del:hover{ background:var(--danger-soft); color:var(--danger); }
+
+  .card-head-row{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+  }
+  .card-head-row h2{ margin:0; }
+
+  /* ---- Ledger rows ---- */
+  .entry{
+    display:grid;
+    grid-template-columns:auto 1fr auto auto;
+    align-items:center;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .entry:last-child{ border-bottom:none; }
+  .entry-date{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    width:76px;
+  }
+  .entry-mid{ display:flex; flex-direction:column; gap:6px; }
+  .entry-time{ font-family:var(--font-mono); font-size:14px; color:var(--ink); }
+  .entry-tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tag{
+    font-family:var(--font-mono);
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:20px;
+    font-weight:600;
+  }
+  .tag-day{ background:var(--day-soft); color:var(--day); }
+  .tag-night{ background:var(--night-soft); color:var(--night); }
+  .tag-break{ background:var(--card-2); color:var(--ink-soft); border:1px solid var(--line); }
+  .entry-pay{
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:15.5px;
+    text-align:right;
+    white-space:nowrap;
+    color:var(--ink);
+  }
+  .del{
+    background:none; border:none; color:var(--ink-soft);
+    font-size:16px; cursor:pointer; padding:4px 6px; border-radius:6px;
+  }
+  .del:hover{ background:var(--danger-soft); color:var(--danger); }
+  .empty{
+    text-align:center; color:var(--ink-soft); font-size:13.5px;
+    padding:20px 0; font-family:var(--font-mono);
+  }
+
+  /* ---- Summary ---- */
+  .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+  .stat{
+    background:var(--card-2);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:14px 12px;
+  }
+  .stat .label{ font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;}
+  .stat .val{ font-family:var(--font-mono); font-size:19px; font-weight:700; }
+  .stat.total .val{ color:var(--ink); }
+  .stat.day .val{ color:var(--day); }
+  .stat.night .val{ color:var(--night); }
+
+  .legend{
+    display:flex; gap:16px; margin-top:14px;
+    font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft);
+  }
+  .legend span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block;}
+  .dot.d{ background:var(--day); box-shadow:0 0 6px var(--day); }
+  .dot.n{ background:var(--night); box-shadow:0 0 6px var(--night); }
+
+  @media (max-width:480px){
+    .row{ grid-template-columns:1fr; }
+    .summary-grid{ grid-template-columns:1fr; }
+    .entry{ grid-template-columns:1fr; text-align:left; }
+    .entry-pay{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div id="loginView" class="wrap" style="display:none;">
+  <div class="card" style="margin-top:60px;">
+    <h2>Кіру</h2>
+    <p class="sub" style="line-height:1.6; margin-bottom:14px; display:block;">
+      Профиліңізді бөлек сақтау үшін email енгізіңіз. Ескерту: бұл нақты құпиясөзбен
+      қорғалған тіркелгі емес — email-ді білетін кез келген адам сол профильді аша алады,
+      бұл тек әркімнің деректерін бөлек ұстау үшін қолданылады.
+    </p>
+    <label for="loginEmail">Email</label>
+    <input type="email" id="loginEmail" placeholder="mysal@gmail.com">
+    <div id="loginError" style="display:none; color:var(--danger); font-family:var(--font-mono); font-size:12.5px; background:var(--danger-soft); padding:8px 10px; border-radius:7px; margin-top:10px;"></div>
+    <button type="button" id="loginBtn" class="btn-primary" style="margin-top:14px;">Кіру</button>
+  </div>
+</div>
+
+<div id="appView" class="wrap" style="display:none;">
+
+  <header>
+    <svg class="dial" width="56" height="56" viewBox="0 0 56 56">
+      <circle cx="28" cy="28" r="26" fill="var(--card-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <!-- day arc: 00:00 -> 22:00 (0deg=top, clockwise) -->
+      <path d="M 28 3 A 25 25 0 1 1 12.7 51.2" fill="none" stroke="var(--day)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- night arc: 22:00 -> 24:00 -->
+      <path d="M 12.7 51.2 A 25 25 0 0 1 28 3" fill="none" stroke="var(--night)" stroke-width="3.5" stroke-linecap="round" transform="rotate(0 28 28)" opacity="0"/>
+      <path d="M 12.7 51.2 A 25 25 0 0 0 28 3" fill="none" stroke="var(--night)" stroke-width="3.5" stroke-linecap="round" />
+      <circle cx="28" cy="28" r="2" fill="var(--ink)"/>
+      <line x1="28" y1="28" x2="28" y2="10" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="28" x2="18" y2="28" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <h1>WorkPay</h1>
+      <div class="sub" id="headerSub">1 265 ₸/сағ · 22:00-ден кейін 1 890 ₸/сағ</div>
+    </div>
+  </header>
+
+  <div class="profile-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-family:var(--font-mono); font-size:12px; color:var(--ink-soft);">
+    <span>Профиль: <span id="profileEmail" style="color:var(--ink);"></span></span>
+    <button type="button" id="switchProfileBtn" class="btn-ghost btn-small">Профильді ауыстыру</button>
+  </div>
+
+  <div id="saveStatus" style="display:none; font-family:var(--font-mono); font-size:12px; color:var(--danger); background:var(--danger-soft); border:1px solid var(--danger); border-radius:8px; padding:9px 12px; margin-bottom:16px;"></div>
+
+  <div class="card">
+    <div class="card-head-row">
+      <h2>Ставка баптаулары</h2>
+      <span class="sub" id="rateSummary" style="font-size:11.5px;"></span>
+    </div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr;">
+      <div>
+        <label for="rDay">Күндізгі ставка (тг/сағ)</label>
+        <input type="number" id="rDay">
+      </div>
+      <div>
+        <label for="rNight">Түнгі ставка (тг/сағ)</label>
+        <input type="number" id="rNight">
+      </div>
+      <div>
+        <label for="rHour">Түн неше сағатта басталады</label>
+        <input type="number" id="rHour" min="0" max="23">
+      </div>
+    </div>
+    <button type="button" id="rateSaveBtn" class="btn-ghost btn-small" style="margin-top:12px;">Ставканы сақтау</button>
+  </div>
+
+  <div class="card">
+    <h2>Жаңа жазба қосу</h2>
+    <div id="entryForm">
+      <div>
+        <label for="fdate">Күні</label>
+        <input type="date" id="fdate">
+      </div>
+      <div class="row">
+        <div>
+          <label for="fstart">Келген уақыт</label>
+          <input type="time" id="fstart">
+        </div>
+        <div>
+          <label for="fend">Кеткен уақыт</label>
+          <input type="time" id="fend">
+        </div>
+      </div>
+      <div>
+        <label>Үзілістер (30 минуттан, төленбейді)</label>
+        <div class="break-item">
+          <label class="chk"><input type="checkbox" id="fbreak1"> 1-үзіліс (30 мин)</label>
+          <select id="fbreak1time" class="break-select">
+            <option value="before">22:00 дейін шықтым</option>
+            <option value="after">22:00 кейін шықтым</option>
+          </select>
+        </div>
+        <div class="break-item">
+          <label class="chk"><input type="checkbox" id="fbreak2"> 2-үзіліс (30 мин)</label>
+          <select id="fbreak2time" class="break-select">
+            <option value="before">22:00 дейін шықтым</option>
+            <option value="after">22:00 кейін шықтым</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="saveBtn" class="btn-primary">Сақтау</button>
+        <button type="button" id="clearFormBtn" class="btn-ghost">Тазалау</button>
+        <button type="button" id="cancelEditBtn" class="btn-ghost" style="display:none;">Болдырмау</button>
+      </div>
+      <div id="formError" style="display:none; color:var(--danger); font-family:var(--font-mono); font-size:12.5px; background:var(--danger-soft); padding:8px 10px; border-radius:7px;"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="month-nav">
+      <button class="arrow" id="prevMonth">‹</button>
+      <div class="label" id="monthLabel">—</div>
+      <button class="arrow" id="nextMonth">›</button>
+    </div>
+    <div class="summary-grid">
+      <div class="stat total">
+        <div class="label">Барлық сома</div>
+        <div class="val" id="sumTotal">0 ₸</div>
+      </div>
+      <div class="stat day">
+        <div class="label">Күндізгі</div>
+        <div class="val" id="sumDay">0 сағ</div>
+      </div>
+      <div class="stat night">
+        <div class="label">Түнгі</div>
+        <div class="val" id="sumNight">0 сағ</div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i class="dot d"></i><span id="legendDay">22:00 дейін — 1 265 ₸/сағ</span></span>
+      <span><i class="dot n"></i><span id="legendNight">22:00 кейін — 1 890 ₸/сағ</span></span>
+    </div>
+    <div class="goal-row">
+      <label style="margin:0;">Айлық мақсат:</label>
+      <input type="number" id="goalInput" placeholder="мысалы 300000">
+      <button type="button" id="goalSaveBtn" class="btn-ghost btn-small">Сақтау</button>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="goalFill" style="width:0%;"></div></div>
+    <div class="goal-label" id="goalLabel">Мақсат қойылмаған</div>
+
+    <div class="plan-box" id="planBox">
+      <div class="plan-row">
+        <div>
+          <label style="margin:0 0 4px;">Смена ұзақтығы</label>
+          <select id="planHours" class="break-select" style="width:120px;">
+            <option value="6">6 сағат</option>
+            <option value="7">7 сағат</option>
+            <option value="8" selected>8 сағат</option>
+            <option value="9">9 сағат</option>
+            <option value="10">10 сағат</option>
+            <option value="11">11 сағат</option>
+            <option value="12">12 сағат</option>
+            <option value="13">13 сағат</option>
+            <option value="14">14 сағат</option>
+            <option value="15">15 сағат</option>
+            <option value="16">16 сағат</option>
+          </select>
+        </div>
+        <div>
+          <label style="margin:0 0 4px;">Шығатын уақыт</label>
+          <input type="time" id="planStart" style="width:110px;">
+        </div>
+      </div>
+      <div class="plan-result" id="planResult"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Күндік статистика</h2>
+    <div class="chart-wrap" id="chartWrap"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head-row">
+      <h2>Осы айдағы жазбалар</h2>
+      <button type="button" id="csvBtn" class="btn-ghost btn-small">CSV жүктеу</button>
+    </div>
+    <div id="entries"></div>
+  </div>
+
+</div>
+
+<script>
+let DAY_RATE = 1265;
+let NIGHT_RATE = 1890;
+let NIGHT_HOUR = 22;
+const MONTH_NAMES = ['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
+
+let entries = [];
+let goal = 0;
+let editingId = null;
+const today = new Date();
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth(); // 0-11
+
+function timeToMinutes(t){ const [h,m]=t.split(':').map(Number); return h*60+m; }
+function ymKey(y,m){ return y+'-'+String(m+1).padStart(2,'0'); }
+function daysInMonth(y,m){ return new Date(y, m+1, 0).getDate(); }
+
+function calcEntry(e){
+  let startMin = timeToMinutes(e.start);
+  let endMin = timeToMinutes(e.end);
+  if(endMin <= startMin) endMin += 24*60; // түн ортасынан асса
+  const nightThreshold = NIGHT_HOUR*60;
+
+  let dayMin = Math.max(0, Math.min(endMin, nightThreshold) - startMin);
+  let nightMin = Math.max(0, endMin - Math.max(startMin, nightThreshold));
+
+  let breakBeforeMin = 0, breakAfterMin = 0;
+  if(e.break1){ if(e.break1time==='after') breakAfterMin += 30; else breakBeforeMin += 30; }
+  if(e.break2){ if(e.break2time==='after') breakAfterMin += 30; else breakBeforeMin += 30; }
+  const breakMin = breakBeforeMin + breakAfterMin;
+
+  const dayMinPaid = Math.max(0, dayMin - breakBeforeMin);
+  const nightMinPaid = Math.max(0, nightMin - breakAfterMin);
+
+  const dayHours = dayMinPaid/60;
+  const nightHours = nightMinPaid/60;
+  const pay = dayHours*DAY_RATE + nightHours*NIGHT_RATE;
+  return { dayHours, nightHours, totalHours: dayHours+nightHours, pay, breakMin };
+}
+
+function fmt(n){
+  const rounded = Math.round(n);
+  return rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+function fmtH(n){
+  return (Math.round(n*100)/100).toString();
+}
+function fmtDate(dateStr){
+  const parts = dateStr.split('-');
+  return parts[2] + '.' + parts[1];
+}
+
+function updateRateLabels(){
+  document.getElementById('headerSub').textContent =
+    fmt(DAY_RATE)+' ₸/сағ · '+NIGHT_HOUR+':00-ден кейін '+fmt(NIGHT_RATE)+' ₸/сағ';
+  document.getElementById('legendDay').textContent =
+    NIGHT_HOUR+':00 дейін — '+fmt(DAY_RATE)+' ₸/сағ';
+  document.getElementById('legendNight').textContent =
+    NIGHT_HOUR+':00 кейін — '+fmt(NIGHT_RATE)+' ₸/сағ';
+  document.getElementById('rateSummary').textContent =
+    'қолданыстағы: '+fmt(DAY_RATE)+' / '+fmt(NIGHT_RATE)+' ₸';
+}
+
+function monthEntriesList(){
+  const ym = ymKey(viewYear, viewMonth);
+  return entries.filter(e=>e.date.startsWith(ym));
+}
+
+function drawChart(monthEntries){
+  const wrap = document.getElementById('chartWrap');
+  const dim = daysInMonth(viewYear, viewMonth);
+  const perDay = {};
+  for(let d=1; d<=dim; d++) perDay[d] = 0;
+  monthEntries.forEach(e=>{
+    const day = parseInt(e.date.split('-')[2], 10);
+    perDay[day] += calcEntry(e).pay;
+  });
+  const max = Math.max(1, ...Object.values(perDay));
+  const barW = 16, gap = 6, chartH = 110, leftPad = 4;
+  const w = dim*(barW+gap)+leftPad*2;
+  let bars = '';
+  for(let d=1; d<=dim; d++){
+    const val = perDay[d];
+    const h = val>0 ? Math.max(3, (val/max)*chartH) : 1;
+    const x = leftPad + (d-1)*(barW+gap);
+    const y = chartH - h;
+    const isToday = (d===today.getDate() && viewMonth===today.getMonth() && viewYear===today.getFullYear());
+    const color = val>0 ? (isToday ? 'var(--night)' : 'var(--day)') : 'var(--line)';
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="3" fill="${color}"><title>${d}: ${fmt(val)} ₸</title></rect>`;
+    if(d % 2 === 1 || dim<=15){
+      bars += `<text x="${x+barW/2}" y="${chartH+14}" text-anchor="middle" class="bar-label">${d}</text>`;
+    }
+  }
+  wrap.innerHTML = `<svg width="${w}" height="${chartH+26}" viewBox="0 0 ${w} ${chartH+26}">${bars}</svg>`;
+}
+
+function minutesToTime(min){
+  min = ((min%1440)+1440)%1440;
+  const h=Math.floor(min/60), m=min%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+
+function updatePlan(totalPay){
+  const box = document.getElementById('planResult');
+  if(!goal || goal<=0){
+    box.innerHTML = 'Жоспарды көру үшін алдымен мақсат сомасын енгізіп сақтаңыз.';
+    return;
+  }
+  const remaining = goal - totalPay;
+  if(remaining<=0){
+    box.innerHTML = '🎉 Бұл айда мақсатқа жеттіңіз!';
+    return;
+  }
+  const hours = Number(document.getElementById('planHours').value) || 8;
+  const start = document.getElementById('planStart').value || '09:00';
+  const startMin = timeToMinutes(start);
+  const endMin = startMin + hours*60;
+  const fakeEntry = { start: start, end: minutesToTime(endMin), break1:false, break2:false };
+  const c = calcEntry(fakeEntry);
+  const payPerShift = c.pay;
+
+  if(payPerShift<=0){
+    box.innerHTML = 'Есептеу үшін дұрыс уақыт енгізіңіз.';
+    return;
+  }
+
+  const shiftsNeeded = Math.ceil(remaining / payPerShift);
+  const totalHoursNeeded = shiftsNeeded * hours;
+
+  const dim = daysInMonth(viewYear, viewMonth);
+  const isCurrentMonth = (viewYear===today.getFullYear() && viewMonth===today.getMonth());
+  const daysLeftInMonth = isCurrentMonth ? (dim - today.getDate() + 1) : dim;
+
+  let warn = '';
+  if(shiftsNeeded > daysLeftInMonth){
+    warn = `<div class="warn" style="margin-top:8px;">⚠ Бұл айда қалған ${daysLeftInMonth} күнге сыймайды — ұзағырақ смена немесе қосымша күн керек болады.</div>`;
+  }
+
+  box.innerHTML =
+    `Қалды: <span class="hl2">${fmt(remaining)} ₸</span>. `+
+    `${start}-де шығып, <span class="hl">${hours} сағаттан</span> жұмыс істесеңіз — бір смена шамамен <span class="hl2">${fmt(payPerShift)} ₸</span>.<br>`+
+    `Мақсатқа жету үшін тағы <span class="hl">${shiftsNeeded} күн</span> (шамамен <span class="hl">${totalHoursNeeded} сағат</span>) жұмыс істеу керек.`+
+    warn;
+}
+
+function updateGoalUI(totalPay){
+  const label = document.getElementById('goalLabel');
+  const fill = document.getElementById('goalFill');
+  if(!goal || goal<=0){
+    label.textContent = 'Мақсат қойылмаған';
+    fill.style.width = '0%';
+    return;
+  }
+  const pct = Math.min(100, (totalPay/goal)*100);
+  fill.style.width = pct.toFixed(1)+'%';
+  label.textContent = fmt(totalPay)+' ₸ / '+fmt(goal)+' ₸ ('+pct.toFixed(0)+'%)';
+}
+
+function render(){
+ try{
+  document.getElementById('monthLabel').textContent = MONTH_NAMES[viewMonth]+' '+viewYear;
+
+  const monthEntries = monthEntriesList();
+  const list = document.getElementById('entries');
+
+  if(monthEntries.length===0){
+    list.innerHTML = '<div class="empty">Бұл айда жазба жоқ</div>';
+  } else {
+    const sorted = [...monthEntries].sort((a,b)=> b.date.localeCompare(a.date));
+    list.innerHTML = sorted.map(e=>{
+      const c = calcEntry(e);
+      const dateStr = fmtDate(e.date);
+      let tags = '';
+      if(c.dayHours>0) tags += `<span class="tag tag-day">күн ${fmtH(c.dayHours)} сағ</span>`;
+      if(c.nightHours>0) tags += `<span class="tag tag-night">түн ${fmtH(c.nightHours)} сағ</span>`;
+      if(c.breakMin>0) tags += `<span class="tag tag-break">үзіліс ${c.breakMin} мин</span>`;
+      return `<div class="entry">
+        <div class="entry-date">${dateStr}</div>
+        <div class="entry-mid">
+          <div class="entry-time">${e.start} — ${e.end}</div>
+          <div class="entry-tags">${tags}</div>
+        </div>
+        <div class="entry-pay">${fmt(c.pay)} ₸</div>
+        <div class="entry-actions">
+          <button class="icon-btn edit" onclick="startEdit('${e.id}')" title="Өңдеу">✎</button>
+          <button class="icon-btn del" onclick="removeEntry('${e.id}')" title="Өшіру">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  let totalPay=0, totalDay=0, totalNight=0;
+  monthEntries.forEach(e=>{
+    const c = calcEntry(e);
+    totalPay += c.pay; totalDay += c.dayHours; totalNight += c.nightHours;
+  });
+  document.getElementById('sumTotal').textContent = fmt(totalPay)+' ₸';
+  document.getElementById('sumDay').textContent = fmtH(totalDay)+' сағ';
+  document.getElementById('sumNight').textContent = fmtH(totalNight)+' сағ';
+
+  updateGoalUI(totalPay);
+  updatePlan(totalPay);
+  drawChart(monthEntries);
+ }catch(err){
+   console.error('Render қатесі:', err);
+ }
+}
+
+let currentEmail = null;
+
+function keyFor(base){ return base+'::'+currentEmail; }
+
+async function loadEntries(){
+  try{
+    const res = await window.storage.get(keyFor('work-entries'), true);
+    entries = res ? JSON.parse(res.value) : [];
+  }catch(err){
+    entries = [];
+  }
+  try{
+    const g = await window.storage.get(keyFor('work-goal'), true);
+    goal = g ? Number(JSON.parse(g.value)) : 0;
+    document.getElementById('goalInput').value = goal || '';
+  }catch(err){
+    goal = 0;
+  }
+  try{
+    const r = await window.storage.get(keyFor('work-rates'), true);
+    if(r){
+      const rates = JSON.parse(r.value);
+      if(rates.dayRate) DAY_RATE = Number(rates.dayRate);
+      if(rates.nightRate) NIGHT_RATE = Number(rates.nightRate);
+      if(rates.nightHour!==undefined) NIGHT_HOUR = Number(rates.nightHour);
+    }
+  }catch(err){
+    // әдепкі ставкалар қалады
+  }
+  document.getElementById('rDay').value = DAY_RATE;
+  document.getElementById('rNight').value = NIGHT_RATE;
+  document.getElementById('rHour').value = NIGHT_HOUR;
+  updateRateLabels();
+
+  try{
+    const p = await window.storage.get(keyFor('work-plan'), true);
+    if(p){
+      const plan = JSON.parse(p.value);
+      if(plan.hours) document.getElementById('planHours').value = plan.hours;
+      if(plan.start) document.getElementById('planStart').value = plan.start;
+    } else {
+      document.getElementById('planStart').value = '09:00';
+    }
+  }catch(err){
+    document.getElementById('planStart').value = '09:00';
+  }
+
+  render();
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+function showSaveStatus(ok){
+  const el = document.getElementById('saveStatus');
+  if(!el) return;
+  if(ok){
+    el.textContent = '';
+    el.style.display = 'none';
+  } else {
+    el.textContent = '⚠ Деректер серверге сақталмады, бірақ бетте қалды. Интернетті тексеріп, тағы көріңіз.';
+    el.style.display = 'block';
+  }
+}
+
+async function storageSetSafe(key, value, shared){
+  try{
+    await window.storage.set(key, value, shared);
+    showSaveStatus(true);
+    return true;
+  }catch(err1){
+    // мүмкін уақытша серверлік ақау — біраз күтіп, тағы бір рет көрейік
+    await sleep(600);
+    try{
+      await window.storage.set(key, value, shared);
+      showSaveStatus(true);
+      return true;
+    }catch(err2){
+      console.warn('Сақтау сәтсіз аяқталды (жад серверінде уақытша ақау болуы мүмкін):', err2.message || err2);
+      showSaveStatus(false);
+      return false;
+    }
+  }
+}
+
+async function saveRates(){
+  await storageSetSafe(keyFor('work-rates'), JSON.stringify({dayRate:DAY_RATE, nightRate:NIGHT_RATE, nightHour:NIGHT_HOUR}), true);
+}
+
+async function saveEntries(){
+  await storageSetSafe(keyFor('work-entries'), JSON.stringify(entries), true);
+}
+
+async function saveGoal(){
+  await storageSetSafe(keyFor('work-goal'), JSON.stringify(goal), true);
+}
+
+function removeEntry(id){
+  entries = entries.filter(e=>e.id!==id);
+  saveEntries();
+  if(editingId===id) cancelEdit();
+  render();
+}
+window.removeEntry = removeEntry;
+
+function startEdit(id){
+  const e = entries.find(x=>x.id===id);
+  if(!e) return;
+  editingId = id;
+  document.getElementById('fdate').value = e.date;
+  document.getElementById('fstart').value = e.start;
+  document.getElementById('fend').value = e.end;
+  document.getElementById('fbreak1').checked = !!e.break1;
+  document.getElementById('fbreak1time').value = e.break1time || 'before';
+  document.getElementById('fbreak1time').disabled = !e.break1;
+  document.getElementById('fbreak2').checked = !!e.break2;
+  document.getElementById('fbreak2time').value = e.break2time || 'before';
+  document.getElementById('fbreak2time').disabled = !e.break2;
+  document.getElementById('saveBtn').textContent = 'Өзгерісті сақтау';
+  document.getElementById('cancelEditBtn').style.display = 'inline-block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.startEdit = startEdit;
+
+function resetForm(){
+  document.getElementById('fdate').value = '';
+  document.getElementById('fstart').value = '';
+  document.getElementById('fend').value = '';
+  document.getElementById('fbreak1').checked = false;
+  document.getElementById('fbreak2').checked = false;
+  document.getElementById('fbreak1time').disabled = true;
+  document.getElementById('fbreak2time').disabled = true;
+}
+
+function cancelEdit(){
+  editingId = null;
+  resetForm();
+  document.getElementById('saveBtn').textContent = 'Сақтау';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+}
+document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+document.getElementById('clearFormBtn').addEventListener('click', ()=>{
+  cancelEdit();
+});
+
+document.getElementById('saveBtn').addEventListener('click', function(ev){
+  const errBox = document.getElementById('formError');
+  errBox.style.display = 'none';
+
+  const date = document.getElementById('fdate').value;
+  const start = document.getElementById('fstart').value;
+  const end = document.getElementById('fend').value;
+
+  if(!date || !start || !end){
+    errBox.textContent = 'Күні, келген және кеткен уақытты толтырыңыз.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const data = {
+    date: date,
+    start: start,
+    end: end,
+    break1: document.getElementById('fbreak1').checked,
+    break1time: document.getElementById('fbreak1time').value,
+    break2: document.getElementById('fbreak2').checked,
+    break2time: document.getElementById('fbreak2time').value,
+  };
+
+  if(editingId){
+    const idx = entries.findIndex(x=>x.id===editingId);
+    if(idx>-1) entries[idx] = { id: editingId, ...data };
+    editingId = null;
+    document.getElementById('saveBtn').textContent = 'Сақтау';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+  } else {
+    entries.push({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,6), ...data });
+  }
+
+  saveEntries();
+  // назар: форма әдейі тазаланбайды — деректер сол күйінде қалады,
+  // керек жерін өзін өзгертіп, тағы сақтауға болады
+  // жазба қосылған айды автоматты түрде көрсету
+  const [y,m] = date.split('-').map(Number);
+  viewYear = y; viewMonth = m-1;
+  render();
+});
+
+function syncBreakSelect(cbId, selId){
+  const cb = document.getElementById(cbId);
+  const sel = document.getElementById(selId);
+  sel.disabled = !cb.checked;
+  cb.addEventListener('change', ()=> sel.disabled = !cb.checked);
+}
+syncBreakSelect('fbreak1','fbreak1time');
+syncBreakSelect('fbreak2','fbreak2time');
+
+async function savePlan(){
+  const hours = document.getElementById('planHours').value;
+  const start = document.getElementById('planStart').value;
+  await storageSetSafe(keyFor('work-plan'), JSON.stringify({hours, start}), true);
+}
+
+document.getElementById('planHours').addEventListener('change', ()=>{ savePlan(); render(); });
+document.getElementById('planStart').addEventListener('change', ()=>{ savePlan(); render(); });
+
+document.getElementById('rateSaveBtn').addEventListener('click', ()=>{
+  const d = Number(document.getElementById('rDay').value);
+  const n = Number(document.getElementById('rNight').value);
+  const h = Number(document.getElementById('rHour').value);
+  if(d>0) DAY_RATE = d;
+  if(n>0) NIGHT_RATE = n;
+  if(h>=0 && h<=23) NIGHT_HOUR = h;
+  saveRates();
+  updateRateLabels();
+  render();
+});
+
+document.getElementById('prevMonth').addEventListener('click', ()=>{
+  viewMonth--;
+  if(viewMonth<0){ viewMonth=11; viewYear--; }
+  render();
+});
+document.getElementById('nextMonth').addEventListener('click', ()=>{
+  viewMonth++;
+  if(viewMonth>11){ viewMonth=0; viewYear++; }
+  render();
+});
+
+document.getElementById('goalSaveBtn').addEventListener('click', ()=>{
+  const v = Number(document.getElementById('goalInput').value);
+  goal = isNaN(v) ? 0 : v;
+  saveGoal();
+  render();
+});
+
+document.getElementById('csvBtn').addEventListener('click', ()=>{
+  const monthEntries = [...monthEntriesList()].sort((a,b)=>a.date.localeCompare(b.date));
+  let csv = 'Күні;Келген;Кеткен;Үзіліс (мин);Күндізгі сағат;Түнгі сағат;Сома (тг)\n';
+  monthEntries.forEach(e=>{
+    const c = calcEntry(e);
+    csv += `${e.date};${e.start};${e.end};${c.breakMin};${fmtH(c.dayHours)};${fmtH(c.nightHours)};${Math.round(c.pay)}\n`;
+  });
+  const totalPay = monthEntries.reduce((s,e)=>s+calcEntry(e).pay,0);
+  csv += `;;;;;Барлығы:;${Math.round(totalPay)}\n`;
+
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `jumys_${ymKey(viewYear,viewMonth)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+function validEmail(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+function showLoginView(){
+  document.getElementById('appView').style.display = 'none';
+  document.getElementById('loginView').style.display = 'block';
+}
+
+async function showAppView(){
+  document.getElementById('loginView').style.display = 'none';
+  document.getElementById('appView').style.display = 'block';
+  document.getElementById('profileEmail').textContent = currentEmail;
+  await loadEntries();
+}
+
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const errBox = document.getElementById('loginError');
+  const val = document.getElementById('loginEmail').value.trim().toLowerCase();
+  if(!validEmail(val)){
+    errBox.textContent = 'Дұрыс email форматын енгізіңіз (мысалы, ali@mail.com).';
+    errBox.style.display = 'block';
+    return;
+  }
+  errBox.style.display = 'none';
+  currentEmail = val;
+  await storageSetSafe('last-email', currentEmail, false);
+  await showAppView();
+});
+
+document.getElementById('loginEmail').addEventListener('keydown', (ev)=>{
+  if(ev.key==='Enter') document.getElementById('loginBtn').click();
+});
+
+document.getElementById('switchProfileBtn').addEventListener('click', async ()=>{
+  currentEmail = null;
+  await storageSetSafe('last-email', '', false);
+  document.getElementById('loginEmail').value = '';
+  showLoginView();
+});
+
+async function initApp(){
+  try{
+    const last = await window.storage.get('last-email', false);
+    if(last && last.value && validEmail(last.value)){
+      currentEmail = last.value;
+    }
+  }catch(err){
+    currentEmail = null;
+  }
+  if(currentEmail){
+    document.getElementById('loginEmail').value = currentEmail;
+    await showAppView();
+  } else {
+    showLoginView();
+  }
+}
+
+initApp();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{
+      // хостинг https/localhost болмаса, service worker тіркелмеуі мүмкін — қалыпты жағдай
+    });
+  });
+}
+</script>
+</body>
+</html>
