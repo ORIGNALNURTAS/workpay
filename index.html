@@ -274,29 +274,32 @@
 <body>
 
 <div id="loginView" class="wrap" style="display:none;">
+  <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+    <button type="button" class="theme-toggle" id="langToggleLogin">🌐 <span id="langLabelLogin">ҚАЗ</span></button>
+  </div>
   <div class="card">
-    <h2>Кіру</h2>
-    <p class="sub" style="line-height:1.7; margin-bottom:14px; display:block;">
+    <h2 data-i18n="login_title">Кіру</h2>
+    <p class="sub" data-i18n="login_desc" style="line-height:1.7; margin-bottom:14px; display:block;">
       Профиліңізді бөлек сақтау үшін email және пароль енгізіңіз. Бұл құрылғыда
       (телефон/ноутбук) жергілікті сақталады. Ескерту: бұл толық қауіпсіз сервер
       аутентификациясы емес — деректер осы браузерде ғана сақталады.
     </p>
-    <label for="loginEmail">Email</label>
+    <label for="loginEmail" data-i18n="email_label">Email</label>
     <input type="email" id="loginEmail" placeholder="mysal@gmail.com" autocomplete="username">
     <div style="height:10px;"></div>
-    <label for="loginPassword">Пароль</label>
+    <label for="loginPassword" data-i18n="password_label">Пароль</label>
     <div class="pw-field">
-      <input type="password" id="loginPassword" placeholder="кемінде 4 таңба" autocomplete="current-password">
-      <button type="button" class="pw-toggle" id="pwToggle">Көрсету</button>
+      <input type="password" id="loginPassword" data-i18n-placeholder="password_placeholder" placeholder="кемінде 4 таңба" autocomplete="current-password">
+      <button type="button" class="pw-toggle" id="pwToggle" data-i18n="pw_show">Көрсету</button>
     </div>
     <div id="loginError" style="display:none; color:var(--danger); font-family:var(--font-mono); font-size:12.5px; background:var(--danger-soft); padding:8px 10px; border-radius:7px; margin-top:10px;"></div>
-    <button type="button" id="loginBtn" class="btn-primary" style="margin-top:14px;">Кіру / Тіркелу</button>
+    <button type="button" id="loginBtn" class="btn-primary" data-i18n="login_btn" style="margin-top:14px;">Кіру / Тіркелу</button>
     <div id="pwSavedBox" style="display:none; margin-top:14px;">
-      <div class="info-banner">
+      <div class="info-banner" data-i18n="pw_saved_desc">
         ✓ Жаңа профиль құрылды. Парольді ұмытып қалмау үшін файлға сақтап қойыңыз —
         бұл файл тек осы құрылғыда, тек сізде болады.
       </div>
-      <button type="button" id="downloadPwBtn" class="btn-ghost btn-small" style="margin-top:8px;">Парольді файлға сақтау</button>
+      <button type="button" id="downloadPwBtn" class="btn-ghost btn-small" data-i18n="download_pw_btn" style="margin-top:8px;">Парольді файлға сақтау</button>
     </div>
   </div>
 </div>
@@ -318,76 +321,79 @@
         <div class="sub" id="headerSub">1 265 ₸/сағ · 22:00-ден кейін 1 890 ₸/сағ</div>
       </div>
     </div>
-    <button type="button" class="theme-toggle" id="themeToggle">🌓 <span id="themeLabel">Авто</span></button>
+    <div style="display:flex; gap:8px; flex-shrink:0;">
+      <button type="button" class="theme-toggle" id="langToggle">🌐 <span id="langLabel">ҚАЗ</span></button>
+      <button type="button" class="theme-toggle" id="themeToggle">🌓 <span id="themeLabel">Авто</span></button>
+    </div>
   </header>
 
   <div class="profile-row">
-    <span>Профиль: <span id="profileEmail" style="color:var(--ink);"></span></span>
-    <button type="button" id="switchProfileBtn" class="btn-ghost btn-small">Профильді ауыстыру</button>
+    <span><span data-i18n="profile_label">Профиль: </span><span id="profileEmail" style="color:var(--ink);"></span></span>
+    <button type="button" id="switchProfileBtn" class="btn-ghost btn-small" data-i18n="switch_profile_btn">Профильді ауыстыру</button>
   </div>
 
   <div id="saveStatus" class="status-banner"></div>
 
   <div class="card">
     <div class="card-head-row">
-      <h2>Ставка баптаулары</h2>
+      <h2 data-i18n="rates_title">Ставка баптаулары</h2>
       <span class="sub" id="rateSummary"></span>
     </div>
     <div class="row3">
       <div>
-        <label for="rDay">Күндізгі ставка (тг/сағ)</label>
+        <label for="rDay" data-i18n="rate_day_label">Күндізгі ставка (тг/сағ)</label>
         <input type="number" id="rDay" inputmode="numeric">
       </div>
       <div>
-        <label for="rNight">Түнгі ставка (тг/сағ)</label>
+        <label for="rNight" data-i18n="rate_night_label">Түнгі ставка (тг/сағ)</label>
         <input type="number" id="rNight" inputmode="numeric">
       </div>
       <div>
-        <label for="rHour">Түн неше сағатта басталады</label>
+        <label for="rHour" data-i18n="rate_hour_label">Түн неше сағатта басталады</label>
         <input type="number" id="rHour" min="0" max="23" inputmode="numeric">
       </div>
     </div>
-    <button type="button" id="rateSaveBtn" class="btn-ghost btn-small" style="margin-top:12px;">Ставканы сақтау</button>
+    <button type="button" id="rateSaveBtn" class="btn-ghost btn-small" data-i18n="rate_save_btn" style="margin-top:12px;">Ставканы сақтау</button>
   </div>
 
   <div class="card">
-    <h2>Жаңа жазба қосу</h2>
+    <h2 data-i18n="new_entry_title">Жаңа жазба қосу</h2>
     <div class="form-like">
       <div>
-        <label for="fdate">Күні (КК.АА.ЖЖЖЖ)</label>
+        <label for="fdate" data-i18n="date_label">Күні (КК.АА.ЖЖЖЖ)</label>
         <input type="text" id="fdate" inputmode="numeric" placeholder="КК.АА.ЖЖЖЖ" maxlength="10">
       </div>
       <div class="row2">
         <div>
-          <label for="fstart">Келген уақыт (СС:ММ)</label>
+          <label for="fstart" data-i18n="start_label">Келген уақыт (СС:ММ)</label>
           <input type="text" id="fstart" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
         </div>
         <div>
-          <label for="fend">Кеткен уақыт (СС:ММ)</label>
+          <label for="fend" data-i18n="end_label">Кеткен уақыт (СС:ММ)</label>
           <input type="text" id="fend" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
         </div>
       </div>
       <div>
-        <label>Үзілістер (30 минуттан, төленбейді)</label>
+        <label data-i18n="breaks_label">Үзілістер (30 минуттан, төленбейді)</label>
         <div class="break-item">
-          <label class="chk"><input type="checkbox" id="fbreak1"> 1-үзіліс (30 мин)</label>
+          <label class="chk"><input type="checkbox" id="fbreak1"> <span data-i18n="break1_label">1-үзіліс (30 мин)</span></label>
           <select id="fbreak1time" class="break-select">
-            <option value="before">22:00 дейін шықтым</option>
-            <option value="after">22:00 кейін шықтым</option>
+            <option value="before" data-i18n="break_before">22:00 дейін шықтым</option>
+            <option value="after" data-i18n="break_after">22:00 кейін шықтым</option>
           </select>
         </div>
         <div class="break-item">
-          <label class="chk"><input type="checkbox" id="fbreak2"> 2-үзіліс (30 мин)</label>
+          <label class="chk"><input type="checkbox" id="fbreak2"> <span data-i18n="break2_label">2-үзіліс (30 мин)</span></label>
           <select id="fbreak2time" class="break-select">
-            <option value="before">22:00 дейін шықтым</option>
-            <option value="after">22:00 кейін шықтым</option>
+            <option value="before" data-i18n="break_before">22:00 дейін шықтым</option>
+            <option value="after" data-i18n="break_after">22:00 кейін шықтым</option>
           </select>
         </div>
       </div>
       <div class="btn-row">
-        <button type="button" id="saveBtn" class="btn-primary">Сақтау</button>
-        <button type="button" id="clearFormBtn" class="btn-ghost">Тазалау</button>
-        <button type="button" id="cancelEditBtn" class="btn-ghost" style="display:none;">Болдырмау</button>
+        <button type="button" id="saveBtn" class="btn-primary" data-i18n="save_btn">Сақтау</button>
+        <button type="button" id="clearFormBtn" class="btn-ghost" data-i18n="clear_btn">Тазалау</button>
+        <button type="button" id="cancelEditBtn" class="btn-ghost" style="display:none;" data-i18n="cancel_btn">Болдырмау</button>
       </div>
       <div id="formError" style="display:none; color:var(--danger); font-family:var(--font-mono); font-size:12.5px; background:var(--danger-soft); padding:8px 10px; border-radius:7px;"></div>
     </div>
@@ -401,15 +407,15 @@
     </div>
     <div class="summary-grid">
       <div class="stat total">
-        <div class="label">Барлық сома</div>
+        <div class="label" data-i18n="stat_total">Барлық сома</div>
         <div class="val" id="sumTotal">0 ₸</div>
       </div>
       <div class="stat day">
-        <div class="label">Күндізгі</div>
+        <div class="label" data-i18n="stat_day">Күндізгі</div>
         <div class="val" id="sumDay">0 сағ</div>
       </div>
       <div class="stat night">
-        <div class="label">Түнгі</div>
+        <div class="label" data-i18n="stat_night">Түнгі</div>
         <div class="val" id="sumNight">0 сағ</div>
       </div>
     </div>
@@ -418,9 +424,9 @@
       <span><i class="dot n"></i><span id="legendNight">22:00 кейін — 1 890 ₸/сағ</span></span>
     </div>
     <div class="goal-row">
-      <label style="margin:0;">Айлық мақсат:</label>
-      <input type="number" id="goalInput" placeholder="мысалы 300000" inputmode="numeric">
-      <button type="button" id="goalSaveBtn" class="btn-ghost btn-small">Сақтау</button>
+      <label style="margin:0;" data-i18n="goal_label_text">Айлық мақсат:</label>
+      <input type="number" id="goalInput" data-i18n-placeholder="goal_placeholder" placeholder="мысалы 300000" inputmode="numeric">
+      <button type="button" id="goalSaveBtn" class="btn-ghost btn-small" data-i18n="save_btn">Сақтау</button>
     </div>
     <div class="progress-track"><div class="progress-fill" id="goalFill" style="width:0%;"></div></div>
     <div class="goal-label" id="goalLabel">Мақсат қойылмаған</div>
@@ -428,23 +434,23 @@
     <div class="plan-box" id="planBox">
       <div class="plan-row">
         <div>
-          <label style="margin:0 0 4px;">Смена ұзақтығы</label>
+          <label style="margin:0 0 4px;" data-i18n="plan_shift_label">Смена ұзақтығы</label>
           <select id="planHours" class="break-select">
-            <option value="6">6 сағат</option>
-            <option value="7">7 сағат</option>
-            <option value="8" selected>8 сағат</option>
-            <option value="9">9 сағат</option>
-            <option value="10">10 сағат</option>
-            <option value="11">11 сағат</option>
-            <option value="12">12 сағат</option>
-            <option value="13">13 сағат</option>
-            <option value="14">14 сағат</option>
-            <option value="15">15 сағат</option>
-            <option value="16">16 сағат</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8" selected>8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
           </select>
         </div>
         <div>
-          <label style="margin:0 0 4px;">Шығатын уақыт (СС:ММ)</label>
+          <label style="margin:0 0 4px;" data-i18n="plan_start_label">Шығатын уақыт (СС:ММ)</label>
           <input type="text" id="planStart" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
         </div>
       </div>
@@ -453,17 +459,17 @@
   </div>
 
   <div class="card">
-    <h2>Күндік статистика</h2>
+    <h2 data-i18n="chart_title">Күндік статистика</h2>
     <div class="chart-wrap" id="chartWrap"></div>
   </div>
 
   <div class="card">
     <div class="card-head-row">
-      <h2>Осы айдағы жазбалар</h2>
+      <h2 data-i18n="entries_title">Осы айдағы жазбалар</h2>
       <div class="head-actions">
-        <button type="button" id="importBtn" class="btn-ghost btn-small">Импорт</button>
+        <button type="button" id="importBtn" class="btn-ghost btn-small" data-i18n="import_btn">Импорт</button>
         <input type="file" id="importFile" accept=".xlsx,.csv" style="display:none;">
-        <button type="button" id="csvBtn" class="btn-ghost btn-small">Excel жүктеу</button>
+        <button type="button" id="csvBtn" class="btn-ghost btn-small" data-i18n="export_btn">Excel жүктеу</button>
       </div>
     </div>
     <div id="entries"></div>
@@ -484,7 +490,8 @@ function applyTheme(){
   const pref = getStoredTheme();
   const effective = resolveTheme(pref);
   document.documentElement.setAttribute('data-theme', effective);
-  const labels = {auto:'Авто', light:'Ашық', dark:'Қараңғы'};
+  const lang = localStorage.getItem('workpay-lang') || 'kk';
+  const labels = lang==='ru' ? {auto:'Авто', light:'Светлая', dark:'Тёмная'} : {auto:'Авто', light:'Ашық', dark:'Қараңғы'};
   const lbl = document.getElementById('themeLabel');
   if(lbl) lbl.textContent = labels[pref];
   const meta = document.querySelector('meta[name="theme-color"]');
@@ -504,11 +511,149 @@ if(window.matchMedia){
 }
 applyTheme();
 
+/* ================= LANGUAGE (KZ / RU) ================= */
+const I18N = {
+  kk: {
+    login_title:'Кіру',
+    login_desc:'Профиліңізді бөлек сақтау үшін email және пароль енгізіңіз. Бұл құрылғыда (телефон/ноутбук) жергілікті сақталады. Ескерту: бұл толық қауіпсіз сервер аутентификациясы емес — деректер осы браузерде ғана сақталады.',
+    email_label:'Email', password_label:'Пароль', password_placeholder:'кемінде 4 таңба',
+    pw_show:'Көрсету', pw_hide:'Жасыру',
+    login_btn:'Кіру / Тіркелу',
+    pw_saved_desc:'✓ Жаңа профиль құрылды. Парольді ұмытып қалмау үшін файлға сақтап қойыңыз — бұл файл тек осы құрылғыда, тек сізде болады.',
+    download_pw_btn:'Парольді файлға сақтау',
+    err_email:'Дұрыс email форматын енгізіңіз (мысалы, ali@mail.com).',
+    err_pw_short:'Пароль кемінде 4 таңбадан тұруы керек.',
+    err_pw_wrong:'Email немесе пароль қате.',
+    profile_label:'Профиль: ', switch_profile_btn:'Профильді ауыстыру',
+    rates_title:'Ставка баптаулары',
+    rate_day_label:'Күндізгі ставка (тг/сағ)', rate_night_label:'Түнгі ставка (тг/сағ)', rate_hour_label:'Түн неше сағатта басталады',
+    rate_save_btn:'Ставканы сақтау', rate_summary_prefix:'қолданыстағы: ',
+    new_entry_title:'Жаңа жазба қосу',
+    date_label:'Күні (КК.АА.ЖЖЖЖ)', start_label:'Келген уақыт (СС:ММ)', end_label:'Кеткен уақыт (СС:ММ)',
+    breaks_label:'Үзілістер (30 минуттан, төленбейді)',
+    break1_label:'1-үзіліс (30 мин)', break2_label:'2-үзіліс (30 мин)',
+    break_before:'22:00 дейін шықтым', break_after:'22:00 кейін шықтым',
+    save_btn:'Сақтау', save_btn_edit:'Өзгерісті сақтау', clear_btn:'Тазалау', cancel_btn:'Болдырмау',
+    err_fill:'Күні, келген және кеткен уақытты толтырыңыз.',
+    err_date_fmt:'Күнді КК.АА.ЖЖЖЖ форматында жазыңыз (мысалы 21.07.2026).',
+    err_time_fmt:'Уақытты СС:ММ форматында жазыңыз (мысалы 09:00).',
+    month_names:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],
+    stat_total:'Барлық сома', stat_day:'Күндізгі', stat_night:'Түнгі',
+    legend_before:'22:00 дейін — ', legend_after:'22:00 кейін — ', per_hour:' ₸/сағ',
+    goal_label_text:'Айлық мақсат:', goal_placeholder:'мысалы 300000',
+    goal_not_set:'Мақсат қойылмаған',
+    plan_shift_label:'Смена ұзақтығы', plan_start_label:'Шығатын уақыт (СС:ММ)',
+    hours_unit:'сағат',
+    plan_no_goal:'Жоспарды көру үшін алдымен мақсат сомасын енгізіп сақтаңыз.',
+    plan_reached:'🎉 Бұл айда мақсатқа жеттіңіз!',
+    plan_bad_time:'Есептеу үшін дұрыс уақыт енгізіңіз.',
+    plan_remaining:'Қалды: ', plan_at:'-де шығып, ', plan_hours_word:' сағаттан', plan_work:' жұмыс істесеңіз — бір смена шамамен ',
+    plan_need:'Мақсатқа жету үшін тағы ', plan_days_word:' күн', plan_approx:' (шамамен ', plan_hours_word2:' сағат) жұмыс істеу керек.',
+    plan_warn:'⚠ Бұл айда қалған ', plan_warn2:' күнге сыймайды — ұзағырақ смена немесе қосымша күн керек болады.',
+    chart_title:'Күндік статистика',
+    entries_title:'Осы айдағы жазбалар', import_btn:'Импорт', export_btn:'Excel жүктеу',
+    entries_empty:'Бұл айда жазба жоқ',
+    tag_day:'күн ', tag_night:'түн ', tag_break:'үзіліс ', tag_hour:' сағ', tag_min:' мин',
+    edit_title:'Өңдеу', del_title:'Өшіру',
+    import_ok_suffix:' жазба импортталды.', import_none:'Жаңа жазба табылмады (бәрі бұрыннан бар немесе формат сәйкес келмеді).',
+    import_err:'Файлды оқу қатесі. WorkPay экспорттаған .xlsx файлды таңдаңыз.',
+    save_error:'⚠ Деректер осы браузерде сақталмады (жад толы немесе жасырын режим болуы мүмкін).',
+    theme_auto:'Авто', theme_light:'Ашық', theme_dark:'Қараңғы',
+    xlsx_headers:['Күні','Келген','Кеткен','Үзіліс (мин)','Күндізгі сағат','Түнгі сағат','Сома (тг)'],
+    xlsx_total:'Барлығы:',
+  },
+  ru: {
+    login_title:'Вход',
+    login_desc:'Введите email и пароль, чтобы хранить свой профиль отдельно. Данные сохраняются локально на этом устройстве (телефон/ноутбук). Внимание: это не полноценная серверная аутентификация — данные хранятся только в этом браузере.',
+    email_label:'Email', password_label:'Пароль', password_placeholder:'минимум 4 символа',
+    pw_show:'Показать', pw_hide:'Скрыть',
+    login_btn:'Войти / Зарегистрироваться',
+    pw_saved_desc:'✓ Новый профиль создан. Сохраните пароль в файл, чтобы не забыть — этот файл будет только на вашем устройстве.',
+    download_pw_btn:'Сохранить пароль в файл',
+    err_email:'Введите корректный email (например, ali@mail.com).',
+    err_pw_short:'Пароль должен содержать не менее 4 символов.',
+    err_pw_wrong:'Неверный email или пароль.',
+    profile_label:'Профиль: ', switch_profile_btn:'Сменить профиль',
+    rates_title:'Настройки ставки',
+    rate_day_label:'Дневная ставка (тг/ч)', rate_night_label:'Ночная ставка (тг/ч)', rate_hour_label:'Во сколько начинается ночь',
+    rate_save_btn:'Сохранить ставку', rate_summary_prefix:'текущая: ',
+    new_entry_title:'Добавить запись',
+    date_label:'Дата (ДД.ММ.ГГГГ)', start_label:'Время прихода (ЧЧ:ММ)', end_label:'Время ухода (ЧЧ:ММ)',
+    breaks_label:'Перерывы (по 30 минут, не оплачиваются)',
+    break1_label:'1-й перерыв (30 мин)', break2_label:'2-й перерыв (30 мин)',
+    break_before:'вышел до 22:00', break_after:'вышел после 22:00',
+    save_btn:'Сохранить', save_btn_edit:'Сохранить изменения', clear_btn:'Очистить', cancel_btn:'Отмена',
+    err_fill:'Заполните дату, время прихода и ухода.',
+    err_date_fmt:'Введите дату в формате ДД.ММ.ГГГГ (например 21.07.2026).',
+    err_time_fmt:'Введите время в формате ЧЧ:ММ (например 09:00).',
+    month_names:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+    stat_total:'Всего заработано', stat_day:'Дневные', stat_night:'Ночные',
+    legend_before:'До 22:00 — ', legend_after:'После 22:00 — ', per_hour:' ₸/ч',
+    goal_label_text:'Цель на месяц:', goal_placeholder:'например 300000',
+    goal_not_set:'Цель не установлена',
+    plan_shift_label:'Длительность смены', plan_start_label:'Время выхода (ЧЧ:ММ)',
+    hours_unit:'ч',
+    plan_no_goal:'Чтобы увидеть план, сначала введите и сохраните сумму цели.',
+    plan_reached:'🎉 Вы достигли цели в этом месяце!',
+    plan_bad_time:'Введите корректное время для расчёта.',
+    plan_remaining:'Осталось: ', plan_at:', выходя в ', plan_hours_word:' часов', plan_work:' — одна смена примерно ',
+    plan_need:'Чтобы достичь цели, нужно ещё ', plan_days_word:' дней', plan_approx:' (примерно ', plan_hours_word2:' часов) работы.',
+    plan_warn:'⚠ Это не уместится в оставшиеся ', plan_warn2:' дней месяца — нужна смена подлиннее или больше дней.',
+    chart_title:'Статистика по дням',
+    entries_title:'Записи за этот месяц', import_btn:'Импорт', export_btn:'Скачать Excel',
+    entries_empty:'В этом месяце записей нет',
+    tag_day:'день ', tag_night:'ночь ', tag_break:'перерыв ', tag_hour:' ч', tag_min:' мин',
+    edit_title:'Изменить', del_title:'Удалить',
+    import_ok_suffix:' записей импортировано.', import_none:'Новых записей не найдено (все уже есть или формат не подошёл).',
+    import_err:'Ошибка чтения файла. Выберите .xlsx файл, экспортированный из WorkPay.',
+    save_error:'⚠ Данные не сохранились в этом браузере (память заполнена или включён приватный режим).',
+    theme_auto:'Авто', theme_light:'Светлая', theme_dark:'Тёмная',
+    xlsx_headers:['Дата','Приход','Уход','Перерыв (мин)','Дневные часы','Ночные часы','Сумма (тг)'],
+    xlsx_total:'Итого:',
+  }
+};
+function getStoredLang(){ return localStorage.getItem('workpay-lang') || 'kk'; }
+function t(key){ const lang = getStoredLang(); return (I18N[lang] && I18N[lang][key]!==undefined) ? I18N[lang][key] : (I18N.kk[key]||key); }
+
+function applyLang(){
+  const lang = getStoredLang();
+  document.documentElement.setAttribute('lang', lang);
+  const langText = lang==='kk' ? 'ҚАЗ' : 'РУС';
+  document.getElementById('langLabel').textContent = langText;
+  document.getElementById('langLabelLogin').textContent = langText;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  // сағат ұзақтығы селектін аудару (мысалы "8" -> "8 сағат" / "8 ч")
+  document.querySelectorAll('#planHours option').forEach(opt=>{
+    opt.textContent = opt.value + ' ' + t('hours_unit');
+  });
+  const pwBtn = document.getElementById('pwToggle');
+  if(pwBtn) pwBtn.textContent = document.getElementById('loginPassword').type==='password' ? t('pw_show') : t('pw_hide');
+  const saveBtn = document.getElementById('saveBtn');
+  if(saveBtn) saveBtn.textContent = editingId ? t('save_btn_edit') : t('save_btn');
+  applyTheme(); // themeLabel мәтінін де жаңарту үшін (тіл сөздігінен алады)
+  if(document.getElementById('appView').style.display !== 'none'){
+    updateRateLabels();
+    render();
+  }
+}
+function toggleLang(){
+  const next = getStoredLang()==='kk' ? 'ru' : 'kk';
+  localStorage.setItem('workpay-lang', next);
+  applyLang();
+}
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggleLogin').addEventListener('click', toggleLang);
+
 /* ================= STATE ================= */
 let DAY_RATE = 1265;
 let NIGHT_RATE = 1890;
 let NIGHT_HOUR = 22;
-const MONTH_NAMES = ['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
+const MONTH_NAMES = I18N.kk.month_names;
 
 let entries = [];
 let goal = 0;
@@ -531,7 +676,7 @@ function showSaveStatus(ok){
   if(!el) return;
   if(ok){ el.style.display='none'; el.textContent=''; }
   else{
-    el.textContent = '⚠ Деректер осы браузерде сақталмады (жад толы немесе жасырын режим болуы мүмкін).';
+    el.textContent = t('save_error');
     el.style.display = 'block';
   }
 }
@@ -658,7 +803,7 @@ function updateGoalUI(totalPay){
   const label = document.getElementById('goalLabel');
   const fill = document.getElementById('goalFill');
   if(!goal || goal<=0){
-    label.textContent = 'Мақсат қойылмаған';
+    label.textContent = t('goal_not_set');
     fill.style.width = '0%';
     return;
   }
@@ -670,12 +815,12 @@ function updateGoalUI(totalPay){
 function updatePlan(totalPay){
   const box = document.getElementById('planResult');
   if(!goal || goal<=0){
-    box.innerHTML = 'Жоспарды көру үшін алдымен мақсат сомасын енгізіп сақтаңыз.';
+    box.innerHTML = t('plan_no_goal');
     return;
   }
   const remaining = goal - totalPay;
   if(remaining<=0){
-    box.innerHTML = '🎉 Бұл айда мақсатқа жеттіңіз!';
+    box.innerHTML = t('plan_reached');
     return;
   }
   const hours = Number(document.getElementById('planHours').value) || 8;
@@ -688,7 +833,7 @@ function updatePlan(totalPay){
   const payPerShift = c.pay;
 
   if(payPerShift<=0){
-    box.innerHTML = 'Есептеу үшін дұрыс уақыт енгізіңіз.';
+    box.innerHTML = t('plan_bad_time');
     return;
   }
 
@@ -701,46 +846,46 @@ function updatePlan(totalPay){
 
   let warn = '';
   if(shiftsNeeded > daysLeftInMonth){
-    warn = '<div class="warn" style="margin-top:8px;">⚠ Бұл айда қалған '+daysLeftInMonth+' күнге сыймайды — ұзағырақ смена немесе қосымша күн керек болады.</div>';
+    warn = '<div class="warn" style="margin-top:8px;">'+t('plan_warn')+daysLeftInMonth+t('plan_warn2')+'</div>';
   }
 
   box.innerHTML =
-    'Қалды: <span class="hl2">'+fmt(remaining)+' ₸</span>. '+
-    start+'-де шығып, <span class="hl">'+hours+' сағаттан</span> жұмыс істесеңіз — бір смена шамамен <span class="hl2">'+fmt(payPerShift)+' ₸</span>.<br>'+
-    'Мақсатқа жету үшін тағы <span class="hl">'+shiftsNeeded+' күн</span> (шамамен <span class="hl">'+totalHoursNeeded+' сағат</span>) жұмыс істеу керек.'+
+    t('plan_remaining')+'<span class="hl2">'+fmt(remaining)+' ₸</span>. '+
+    start+t('plan_at')+'<span class="hl">'+hours+t('plan_hours_word')+'</span>'+t('plan_work')+'<span class="hl2">'+fmt(payPerShift)+' ₸</span>.<br>'+
+    t('plan_need')+'<span class="hl">'+shiftsNeeded+t('plan_days_word')+'</span>'+t('plan_approx')+'<span class="hl">'+totalHoursNeeded+t('plan_hours_word2')+
     warn;
 }
 
 function updateRateLabels(){
   document.getElementById('headerSub').textContent =
-    fmt(DAY_RATE)+' ₸/сағ · '+NIGHT_HOUR+':00-ден кейін '+fmt(NIGHT_RATE)+' ₸/сағ';
+    fmt(DAY_RATE)+t('per_hour')+' · '+NIGHT_HOUR+':00 → '+fmt(NIGHT_RATE)+t('per_hour');
   document.getElementById('legendDay').textContent =
-    NIGHT_HOUR+':00 дейін — '+fmt(DAY_RATE)+' ₸/сағ';
+    t('legend_before')+fmt(DAY_RATE)+t('per_hour');
   document.getElementById('legendNight').textContent =
-    NIGHT_HOUR+':00 кейін — '+fmt(NIGHT_RATE)+' ₸/сағ';
+    t('legend_after')+fmt(NIGHT_RATE)+t('per_hour');
   document.getElementById('rateSummary').textContent =
-    'қолданыстағы: '+fmt(DAY_RATE)+' / '+fmt(NIGHT_RATE)+' ₸';
+    t('rate_summary_prefix')+fmt(DAY_RATE)+' / '+fmt(NIGHT_RATE)+' ₸';
 }
 
 /* ================= RENDER ================= */
 function render(){
  try{
-  document.getElementById('monthLabel').textContent = MONTH_NAMES[viewMonth]+' '+viewYear;
+  document.getElementById('monthLabel').textContent = t('month_names')[viewMonth]+' '+viewYear;
 
   const monthEntries = monthEntriesList();
   const list = document.getElementById('entries');
 
   if(monthEntries.length===0){
-    list.innerHTML = '<div class="empty">Бұл айда жазба жоқ</div>';
+    list.innerHTML = '<div class="empty">'+t('entries_empty')+'</div>';
   } else {
     const sorted = [...monthEntries].sort((a,b)=> b.date.localeCompare(a.date));
     list.innerHTML = sorted.map(e=>{
       const c = calcEntry(e);
       const dateStr = fmtDate(e.date);
       let tags = '';
-      if(c.dayHours>0) tags += '<span class="tag tag-day">күн '+fmtH(c.dayHours)+' сағ</span>';
-      if(c.nightHours>0) tags += '<span class="tag tag-night">түн '+fmtH(c.nightHours)+' сағ</span>';
-      if(c.breakMin>0) tags += '<span class="tag tag-break">үзіліс '+c.breakMin+' мин</span>';
+      if(c.dayHours>0) tags += '<span class="tag tag-day">'+t('tag_day')+fmtH(c.dayHours)+t('tag_hour')+'</span>';
+      if(c.nightHours>0) tags += '<span class="tag tag-night">'+t('tag_night')+fmtH(c.nightHours)+t('tag_hour')+'</span>';
+      if(c.breakMin>0) tags += '<span class="tag tag-break">'+t('tag_break')+c.breakMin+t('tag_min')+'</span>';
       return '<div class="entry">'+
         '<div class="entry-date">'+dateStr+'</div>'+
         '<div class="entry-mid">'+
@@ -749,8 +894,8 @@ function render(){
         '</div>'+
         '<div class="entry-pay">'+fmt(c.pay)+' ₸</div>'+
         '<div class="entry-actions">'+
-          '<button class="icon-btn edit" onclick="startEdit(\''+e.id+'\')" title="Өңдеу">✎</button>'+
-          '<button class="icon-btn del" onclick="removeEntry(\''+e.id+'\')" title="Өшіру">✕</button>'+
+          '<button class="icon-btn edit" onclick="startEdit(\''+e.id+'\')" title="'+t('edit_title')+'">✎</button>'+
+          '<button class="icon-btn del" onclick="removeEntry(\''+e.id+'\')" title="'+t('del_title')+'">✕</button>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -890,7 +1035,7 @@ function startEdit(id){
   document.getElementById('fbreak2').checked = !!e.break2;
   document.getElementById('fbreak2time').value = e.break2time || 'before';
   document.getElementById('fbreak2time').disabled = !e.break2;
-  document.getElementById('saveBtn').textContent = 'Өзгерісті сақтау';
+  document.getElementById('saveBtn').textContent = t('save_btn_edit');
   document.getElementById('cancelEditBtn').style.display = 'inline-block';
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -910,7 +1055,7 @@ function resetForm(){
 function cancelEdit(){
   editingId = null;
   resetForm();
-  document.getElementById('saveBtn').textContent = 'Сақтау';
+  document.getElementById('saveBtn').textContent = t('save_btn');
   document.getElementById('cancelEditBtn').style.display = 'none';
 }
 document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
@@ -926,17 +1071,17 @@ document.getElementById('saveBtn').addEventListener('click', function(){
 
   const iso = dateToISO(dateRaw);
   if(!dateRaw || !start || !end){
-    errBox.textContent = 'Күні, келген және кеткен уақытты толтырыңыз.';
+    errBox.textContent = t('err_fill');
     errBox.style.display = 'block';
     return;
   }
   if(!iso){
-    errBox.textContent = 'Күнді КК.АА.ЖЖЖЖ форматында жазыңыз (мысалы 21.07.2026).';
+    errBox.textContent = t('err_date_fmt');
     errBox.style.display = 'block';
     return;
   }
   if(!validTime(start) || !validTime(end)){
-    errBox.textContent = 'Уақытты СС:ММ форматында жазыңыз (мысалы 09:00).';
+    errBox.textContent = t('err_time_fmt');
     errBox.style.display = 'block';
     return;
   }
@@ -955,7 +1100,7 @@ document.getElementById('saveBtn').addEventListener('click', function(){
     const idx = entries.findIndex(x=>x.id===editingId);
     if(idx>-1) entries[idx] = { id: editingId, ...data };
     editingId = null;
-    document.getElementById('saveBtn').textContent = 'Сақтау';
+    document.getElementById('saveBtn').textContent = t('save_btn');
     document.getElementById('cancelEditBtn').style.display = 'none';
   } else {
     entries.push({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,6), ...data });
@@ -1011,14 +1156,14 @@ document.getElementById('rateSaveBtn').addEventListener('click', ()=>{
 /* ================= EXCEL EXPORT (SheetJS) ================= */
 document.getElementById('csvBtn').addEventListener('click', ()=>{
   const monthEntries = [...monthEntriesList()].sort((a,b)=>a.date.localeCompare(b.date));
-  const rows = [['Күні','Келген','Кеткен','Үзіліс (мин)','Күндізгі сағат','Түнгі сағат','Сома (тг)']];
+  const rows = [t('xlsx_headers')];
   let totalPay = 0;
   monthEntries.forEach(e=>{
     const c = calcEntry(e);
     totalPay += c.pay;
     rows.push([isoToDate(e.date), e.start, e.end, c.breakMin, Number(fmtH(c.dayHours)), Number(fmtH(c.nightHours)), Math.round(c.pay)]);
   });
-  rows.push(['', '', '', '', '', 'Барлығы:', Math.round(totalPay)]);
+  rows.push(['', '', '', '', '', t('xlsx_total'), Math.round(totalPay)]);
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
   ws['!cols'] = [{wch:12},{wch:9},{wch:9},{wch:13},{wch:13},{wch:11},{wch:12}];
@@ -1064,9 +1209,9 @@ document.getElementById('importFile').addEventListener('change', (ev)=>{
       }
       saveEntries();
       render();
-      alert(imported>0 ? imported+' жазба импортталды.' : 'Жаңа жазба табылмады (бәрі бұрыннан бар немесе формат сәйкес келмеді).');
+      alert(imported>0 ? imported+t('import_ok_suffix') : t('import_none'));
     }catch(err){
-      alert('Файлды оқу қатесі. WorkPay экспорттаған .xlsx файлды таңдаңыз.');
+      alert(t('import_err'));
     }
     ev.target.value = '';
   };
@@ -1079,8 +1224,8 @@ function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 document.getElementById('pwToggle').addEventListener('click', ()=>{
   const pw = document.getElementById('loginPassword');
   const btn = document.getElementById('pwToggle');
-  if(pw.type==='password'){ pw.type='text'; btn.textContent='Жасыру'; }
-  else{ pw.type='password'; btn.textContent='Көрсету'; }
+  if(pw.type==='password'){ pw.type='text'; btn.textContent=t('pw_hide'); }
+  else{ pw.type='password'; btn.textContent=t('pw_show'); }
 });
 
 function showLoginView(){
@@ -1105,12 +1250,12 @@ document.getElementById('loginBtn').addEventListener('click', ()=>{
   const password = document.getElementById('loginPassword').value;
 
   if(!validEmail(email)){
-    errBox.textContent = 'Дұрыс email форматын енгізіңіз (мысалы, ali@mail.com).';
+    errBox.textContent = t('err_email');
     errBox.style.display = 'block';
     return;
   }
   if(!password || password.length<4){
-    errBox.textContent = 'Пароль кемінде 4 таңбадан тұруы керек.';
+    errBox.textContent = t('err_pw_short');
     errBox.style.display = 'block';
     return;
   }
@@ -1131,7 +1276,7 @@ document.getElementById('loginBtn').addEventListener('click', ()=>{
   }
 
   if(storedHash !== inputHash){
-    errBox.textContent = 'Email немесе пароль қате.';
+    errBox.textContent = t('err_pw_wrong');
     errBox.style.display = 'block';
     return;
   }
@@ -1183,6 +1328,7 @@ function initApp(){
   showLoginView();
 }
 
+applyLang();
 initApp();
 
 if('serviceWorker' in navigator){
