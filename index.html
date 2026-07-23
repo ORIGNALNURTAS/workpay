@@ -815,6 +815,7 @@ function loadProfileData(){
   }
 
   render();
+  restoreDraft();
 }
 
 function saveEntries(){ lsSet(keyFor('entries'), JSON.stringify(entries)); }
@@ -825,6 +826,48 @@ function savePlan(){
   const start = document.getElementById('planStart').value;
   lsSet(keyFor('plan'), JSON.stringify({hours, start}));
 }
+
+/* ---- Draft autosave: what you type in the "new entry" form is never lost,
+   even if the page refreshes before you press "Сақтау" ---- */
+function saveDraft(){
+  if(editingId) return; // өңдеу режимінде драфт сақтамаймыз
+  const draft = {
+    date: document.getElementById('fdate').value,
+    start: document.getElementById('fstart').value,
+    end: document.getElementById('fend').value,
+    break1: document.getElementById('fbreak1').checked,
+    break1time: document.getElementById('fbreak1time').value,
+    break2: document.getElementById('fbreak2').checked,
+    break2time: document.getElementById('fbreak2time').value,
+  };
+  const isEmpty = !draft.date && !draft.start && !draft.end && !draft.break1 && !draft.break2;
+  if(isEmpty){ lsSet(keyFor('draft'), ''); return; }
+  lsSet(keyFor('draft'), JSON.stringify(draft));
+}
+function restoreDraft(){
+  try{
+    const raw = lsGet(keyFor('draft'));
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    document.getElementById('fdate').value = d.date || '';
+    document.getElementById('fstart').value = d.start || '';
+    document.getElementById('fend').value = d.end || '';
+    document.getElementById('fbreak1').checked = !!d.break1;
+    document.getElementById('fbreak1time').value = d.break1time || 'before';
+    document.getElementById('fbreak1time').disabled = !d.break1;
+    document.getElementById('fbreak2').checked = !!d.break2;
+    document.getElementById('fbreak2time').value = d.break2time || 'before';
+    document.getElementById('fbreak2time').disabled = !d.break2;
+  }catch(err){}
+}
+function clearDraft(){ lsSet(keyFor('draft'), ''); }
+
+['fdate','fstart','fend'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', saveDraft);
+});
+['fbreak1','fbreak1time','fbreak2','fbreak2time'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', saveDraft);
+});
 
 function removeEntry(id){
   entries = entries.filter(e=>e.id!==id);
@@ -861,6 +904,7 @@ function resetForm(){
   document.getElementById('fbreak2').checked = false;
   document.getElementById('fbreak1time').disabled = true;
   document.getElementById('fbreak2time').disabled = true;
+  clearDraft();
 }
 
 function cancelEdit(){
@@ -918,6 +962,7 @@ document.getElementById('saveBtn').addEventListener('click', function(){
   }
 
   saveEntries();
+  clearDraft();
   const [y,m] = iso.split('-').map(Number);
   viewYear = y; viewMonth = m-1;
   render();
@@ -1143,14 +1188,6 @@ initApp();
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  });
-  // жаңа нұсқа орнағанда бетті бір рет автоматты жаңарту
-  // (жазбалар localStorage-те бөлек сақталады, бұл жаңартуға әсер етпейді)
-  let refreshedOnce = false;
-  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
-    if(refreshedOnce) return;
-    refreshedOnce = true;
-    window.location.reload();
   });
 }
 </script>
