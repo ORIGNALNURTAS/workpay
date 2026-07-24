@@ -333,6 +333,29 @@
   </div>
 
   <div id="saveStatus" class="status-banner"></div>
+  <div id="undoBanner" style="display:none; align-items:center; justify-content:space-between; gap:12px; background:var(--card-2); border:1px solid var(--night); border-radius:9px; padding:10px 14px; margin-bottom:16px; font-family:var(--font-mono); font-size:12.5px;">
+    <span id="undoText"></span>
+    <button type="button" id="undoBtn" class="btn-ghost btn-small" data-i18n="undo_btn" style="flex-shrink:0;">Кері қайтару</button>
+  </div>
+
+  <div class="card" id="paydayCard">
+    <div class="card-head-row">
+      <h2 data-i18n="payday_title">Жалақы күні</h2>
+    </div>
+    <div class="row2">
+      <div>
+        <label for="paydayInput" data-i18n="payday_label">Айдың нешесінде (1-31)</label>
+        <input type="number" id="paydayInput" min="1" max="31" inputmode="numeric" placeholder="мысалы 5">
+      </div>
+      <div style="display:flex; align-items:flex-end;">
+        <button type="button" id="paydaySaveBtn" class="btn-ghost btn-small" data-i18n="save_btn" style="width:100%;">Сақтау</button>
+      </div>
+    </div>
+    <div class="stat total" style="margin-top:12px;">
+      <div class="label" id="paydayStatusLabel" data-i18n="payday_not_set">Күн белгіленбеген</div>
+      <div class="val" id="paydayCountdown"></div>
+    </div>
+  </div>
 
   <div class="card">
     <div class="card-head-row">
@@ -459,6 +482,24 @@
   </div>
 
   <div class="card">
+    <h2 data-i18n="reminder_title">Күнделікті ескерту</h2>
+    <p class="sub" data-i18n="reminder_desc" style="line-height:1.6; margin-bottom:12px; display:block;">
+      Ескерту тек қосымша ашық тұрғанда немесе ашқан сәтте жұмыс істейді.
+      Телефон жабық тұрғанда push-хабарлама жіберу үшін сервер керек, ол қазір қосылмаған —
+      сондықтан бұл кепілді емес, көмекші еске салғыш қана.
+    </p>
+    <div class="break-item">
+      <label class="chk"><input type="checkbox" id="reminderEnabled"> <span data-i18n="reminder_enable">Ескерту қосу</span></label>
+      <input type="text" id="reminderTime" inputmode="numeric" placeholder="СС:ММ" maxlength="5" style="max-width:110px;">
+    </div>
+    <div class="btn-row" style="margin-top:10px;">
+      <button type="button" id="reminderSaveBtn" class="btn-ghost btn-small" data-i18n="reminder_save_btn">Сақтау</button>
+      <button type="button" id="reminderPermBtn" class="btn-ghost btn-small" data-i18n="reminder_perm_btn">Хабарламаға рұқсат беру</button>
+    </div>
+    <div class="info-banner" id="reminderStatus" style="margin-top:10px;"></div>
+  </div>
+
+  <div class="card">
     <h2 data-i18n="chart_title">Күндік статистика</h2>
     <div class="chart-wrap" id="chartWrap"></div>
   </div>
@@ -561,6 +602,21 @@ const I18N = {
     theme_auto:'Авто', theme_light:'Ашық', theme_dark:'Қараңғы',
     xlsx_headers:['Күні','Келген','Кеткен','Үзіліс (мин)','Күндізгі сағат','Түнгі сағат','Сома (тг)'],
     xlsx_total:'Барлығы:',
+    reminder_title:'Күнделікті ескерту',
+    reminder_desc:'Ескерту тек қосымша ашық тұрғанда немесе ашқан сәтте жұмыс істейді. Телефон жабық тұрғанда push-хабарлама жіберу үшін сервер керек, ол қазір қосылмаған — сондықтан бұл кепілді емес, көмекші еске салғыш қана.',
+    reminder_enable:'Ескерту қосу',
+    reminder_save_btn:'Сақтау', reminder_perm_btn:'Хабарламаға рұқсат беру',
+    reminder_perm_granted:'✓ Хабарлама рұқсаты берілген.',
+    reminder_perm_denied:'✕ Хабарлама рұқсаты берілмеген. Телефон баптауларынан қосуға болады.',
+    reminder_perm_unsupported:'Бұл браузер хабарламаны қолдамайды. Тек қосымша ішіндегі ескерту жолағы жұмыс істейді.',
+    reminder_saved:'Сақталды.',
+    reminder_today_missing:'⏰ Бүгін әлі жазба енгізбегенсіз. Ұмытпаңыз!',
+    undo_btn:'Кері қайтару', undo_text:'Жазба өшірілді.',
+    payday_title:'Жалақы күні', payday_label:'Айдың нешесінде (1-31)',
+    payday_not_set:'Күн белгіленбеген',
+    payday_today:'🎉 Бүгін — жалақы күні!',
+    payday_days_left:' күн қалды',
+    payday_tomorrow:'Ертең — жалақы күні!',
   },
   ru: {
     login_title:'Вход',
@@ -610,6 +666,21 @@ const I18N = {
     theme_auto:'Авто', theme_light:'Светлая', theme_dark:'Тёмная',
     xlsx_headers:['Дата','Приход','Уход','Перерыв (мин)','Дневные часы','Ночные часы','Сумма (тг)'],
     xlsx_total:'Итого:',
+    reminder_title:'Ежедневное напоминание',
+    reminder_desc:'Напоминание работает только пока приложение открыто или в момент его открытия. Для push-уведомлений при закрытом телефоне нужен сервер, который сейчас не подключён — поэтому это не гарантированное, а вспомогательное напоминание.',
+    reminder_enable:'Включить напоминание',
+    reminder_save_btn:'Сохранить', reminder_perm_btn:'Разрешить уведомления',
+    reminder_perm_granted:'✓ Разрешение на уведомления получено.',
+    reminder_perm_denied:'✕ Разрешение не дано. Можно включить в настройках телефона.',
+    reminder_perm_unsupported:'Этот браузер не поддерживает уведомления. Будет работать только баннер внутри приложения.',
+    reminder_saved:'Сохранено.',
+    reminder_today_missing:'⏰ Вы ещё не внесли запись за сегодня. Не забудьте!',
+    undo_btn:'Отменить', undo_text:'Запись удалена.',
+    payday_title:'День зарплаты', payday_label:'Число месяца (1-31)',
+    payday_not_set:'День не установлен',
+    payday_today:'🎉 Сегодня день зарплаты!',
+    payday_days_left:' дн. осталось',
+    payday_tomorrow:'Завтра день зарплаты!',
   }
 };
 function getStoredLang(){ return localStorage.getItem('workpay-lang') || 'kk'; }
@@ -639,6 +710,8 @@ function applyLang(){
   if(document.getElementById('appView').style.display !== 'none'){
     updateRateLabels();
     render();
+    const pd = lsGet(keyFor('payday'));
+    updatePaydayCountdown(pd ? Number(pd) : null);
   }
 }
 function toggleLang(){
@@ -690,25 +763,40 @@ function simpleHash(str){
 }
 
 /* ================= DATE / TIME TEXT INPUT HELPERS ================= */
+function formatDateDigits(digits){
+  if(digits.length>4) return digits.slice(0,2)+'.'+digits.slice(2,4)+'.'+digits.slice(4);
+  if(digits.length>2) return digits.slice(0,2)+'.'+digits.slice(2);
+  return digits;
+}
+function formatTimeDigits(digits){
+  if(digits.length>2) return digits.slice(0,2)+':'+digits.slice(2);
+  return digits;
+}
+function reformatPreservingCursor(el, formatFn, maxDigits){
+  const start = el.selectionStart===null ? el.value.length : el.selectionStart;
+  const digitsBeforeCursor = el.value.slice(0, start).replace(/\D/g,'').length;
+  const digits = el.value.replace(/\D/g,'').slice(0, maxDigits);
+  const formatted = formatFn(digits);
+  el.value = formatted;
+  let pos = 0, count = 0;
+  while(pos < formatted.length && count < digitsBeforeCursor){
+    if(/\d/.test(formatted[pos])) count++;
+    pos++;
+  }
+  el.setSelectionRange(pos, pos);
+}
 function attachDateAutoFormat(el){
   el.addEventListener('input', ()=>{
-    let digits = el.value.replace(/\D/g,'').slice(0,8);
-    let out = digits;
-    if(digits.length>4) out = digits.slice(0,2)+'.'+digits.slice(2,4)+'.'+digits.slice(4);
-    else if(digits.length>2) out = digits.slice(0,2)+'.'+digits.slice(2);
-    el.value = out;
+    reformatPreservingCursor(el, formatDateDigits, 8);
   });
 }
 function attachTimeAutoFormat(el){
   el.addEventListener('input', ()=>{
-    let digits = el.value.replace(/\D/g,'').slice(0,4);
-    let out = digits;
-    if(digits.length>2) out = digits.slice(0,2)+':'+digits.slice(2);
-    el.value = out;
+    reformatPreservingCursor(el, formatTimeDigits, 4);
   });
 }
 ['fdate'].forEach(id=>attachDateAutoFormat(document.getElementById(id)));
-['fstart','fend','planStart'].forEach(id=>attachTimeAutoFormat(document.getElementById(id)));
+['fstart','fend','planStart','reminderTime'].forEach(id=>attachTimeAutoFormat(document.getElementById(id)));
 
 function dateToISO(v){
   const m = (v||'').match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -961,6 +1049,9 @@ function loadProfileData(){
 
   render();
   restoreDraft();
+  loadPaydaySettings();
+  loadReminderSettings();
+  checkReminder();
 }
 
 function saveEntries(){ lsSet(keyFor('entries'), JSON.stringify(entries)); }
@@ -971,6 +1062,129 @@ function savePlan(){
   const start = document.getElementById('planStart').value;
   lsSet(keyFor('plan'), JSON.stringify({hours, start}));
 }
+
+/* ================= DAILY REMINDER (best-effort, foreground/open-app only — no server) ================= */
+/* ================= PAYDAY COUNTDOWN ================= */
+function loadPaydaySettings(){
+  const raw = lsGet(keyFor('payday'));
+  const day = raw ? Number(raw) : null;
+  document.getElementById('paydayInput').value = day || '';
+  updatePaydayCountdown(day);
+}
+document.getElementById('paydaySaveBtn').addEventListener('click', ()=>{
+  const v = Number(document.getElementById('paydayInput').value);
+  if(v>=1 && v<=31){
+    lsSet(keyFor('payday'), String(v));
+    updatePaydayCountdown(v);
+  }
+});
+function daysInMonthNum(y,m){ return new Date(y, m+1, 0).getDate(); }
+function updatePaydayCountdown(day){
+  const label = document.getElementById('paydayStatusLabel');
+  const val = document.getElementById('paydayCountdown');
+  if(!day){
+    label.textContent = t('payday_not_set');
+    val.textContent = '';
+    return;
+  }
+  const now = new Date();
+  now.setHours(0,0,0,0);
+
+  function paydayDateFor(y,m){
+    const clamped = Math.min(day, daysInMonthNum(y,m));
+    return new Date(y, m, clamped);
+  }
+
+  let candidate = paydayDateFor(now.getFullYear(), now.getMonth());
+  if(candidate < now){
+    let ny = now.getFullYear(), nm = now.getMonth()+1;
+    if(nm>11){ nm=0; ny++; }
+    candidate = paydayDateFor(ny, nm);
+  }
+
+  const diffDays = Math.round((candidate - now) / 86400000);
+  label.textContent = t('payday_title');
+  if(diffDays===0) val.textContent = t('payday_today');
+  else if(diffDays===1) val.textContent = t('payday_tomorrow');
+  else val.textContent = diffDays + t('payday_days_left');
+}
+
+function loadReminderSettings(){
+  try{
+    const raw = lsGet(keyFor('reminder'));
+    const r = raw ? JSON.parse(raw) : {enabled:false, time:'20:00'};
+    document.getElementById('reminderEnabled').checked = !!r.enabled;
+    document.getElementById('reminderTime').value = r.time || '20:00';
+  }catch(err){
+    document.getElementById('reminderTime').value = '20:00';
+  }
+  updateReminderStatus();
+}
+function saveReminderSettings(){
+  const enabled = document.getElementById('reminderEnabled').checked;
+  const time = document.getElementById('reminderTime').value;
+  lsSet(keyFor('reminder'), JSON.stringify({enabled, time}));
+  updateReminderStatus();
+  checkReminder();
+}
+function updateReminderStatus(){
+  const box = document.getElementById('reminderStatus');
+  if(!('Notification' in window)){
+    box.textContent = t('reminder_perm_unsupported');
+  } else if(Notification.permission==='granted'){
+    box.textContent = t('reminder_perm_granted');
+  } else if(Notification.permission==='denied'){
+    box.textContent = t('reminder_perm_denied');
+  } else {
+    box.textContent = '';
+  }
+}
+document.getElementById('reminderSaveBtn').addEventListener('click', saveReminderSettings);
+document.getElementById('reminderPermBtn').addEventListener('click', ()=>{
+  if(!('Notification' in window)){ updateReminderStatus(); return; }
+  Notification.requestPermission().then(()=> updateReminderStatus());
+});
+
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function checkReminder(){
+  try{
+    const raw = lsGet(keyFor('reminder'));
+    if(!raw) return;
+    const r = JSON.parse(raw);
+    if(!r.enabled || !validTime(r.time)) return;
+
+    const now = new Date();
+    const nowMin = now.getHours()*60+now.getMinutes();
+    const [rh, rm] = r.time.split(':').map(Number);
+    if(nowMin < rh*60+rm) return;
+
+    const todayStr = todayISO();
+    const hasToday = entries.some(e=>e.date===todayStr);
+    if(hasToday) return;
+
+    const lastNotified = lsGet(keyFor('reminder-last'));
+    if(lastNotified===todayStr) return;
+
+    lsSet(keyFor('reminder-last'), todayStr);
+
+    const msg = t('reminder_today_missing');
+    if('Notification' in window && Notification.permission==='granted'){
+      try{
+        if(navigator.serviceWorker && navigator.serviceWorker.ready){
+          navigator.serviceWorker.ready.then(reg=> reg.showNotification('WorkPay', {body: msg, icon:'./icon-192.png'}));
+        } else {
+          new Notification('WorkPay', {body: msg, icon:'./icon-192.png'});
+        }
+      }catch(err){}
+    }
+    const box = document.getElementById('reminderStatus');
+    box.textContent = msg;
+  }catch(err){}
+}
+setInterval(checkReminder, 60000);
 
 /* ---- Draft autosave: what you type in the "new entry" form is never lost,
    even if the page refreshes before you press "Сақтау" ---- */
@@ -1014,13 +1228,43 @@ function clearDraft(){ lsSet(keyFor('draft'), ''); }
   document.getElementById(id).addEventListener('change', saveDraft);
 });
 
+let lastDeleted = null;
+let undoTimer = null;
+
 function removeEntry(id){
+  const idx = entries.findIndex(e=>e.id===id);
+  if(idx===-1) return;
+  lastDeleted = { entry: entries[idx], index: idx };
   entries = entries.filter(e=>e.id!==id);
   saveEntries();
   if(editingId===id) cancelEdit();
   render();
+  showUndoBanner();
 }
 window.removeEntry = removeEntry;
+
+function showUndoBanner(){
+  const banner = document.getElementById('undoBanner');
+  document.getElementById('undoText').textContent = t('undo_text');
+  banner.style.display = 'flex';
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(hideUndoBanner, 8000);
+}
+function hideUndoBanner(){
+  document.getElementById('undoBanner').style.display = 'none';
+  lastDeleted = null;
+  clearTimeout(undoTimer);
+}
+document.getElementById('undoBtn').addEventListener('click', ()=>{
+  if(!lastDeleted) return;
+  const insertAt = Math.min(lastDeleted.index, entries.length);
+  entries.splice(insertAt, 0, lastDeleted.entry);
+  saveEntries();
+  const [y,m] = lastDeleted.entry.date.split('-').map(Number);
+  viewYear = y; viewMonth = m-1;
+  hideUndoBanner();
+  render();
+});
 
 function startEdit(id){
   const e = entries.find(x=>x.id===id);
@@ -1311,6 +1555,7 @@ document.getElementById('switchProfileBtn').addEventListener('click', ()=>{
   lsSet('wp::last-email', '');
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPassword').value = '';
+  hideUndoBanner();
   showLoginView();
 });
 
