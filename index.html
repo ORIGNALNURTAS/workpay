@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root{
     --radius:12px;
@@ -29,10 +30,14 @@
     --ink:#EDEFF3;
     --ink-soft:#8B93A3;
     --line:#262C36;
-    --day:#E8A94A;
-    --day-soft:rgba(232,169,74,0.14);
+    --day:#4C8DFF;
+    --day-soft:rgba(76,141,255,0.14);
     --night:#8C87F2;
     --night-soft:rgba(140,135,242,0.16);
+    --primary:#4C8DFF;
+    --primary-soft:rgba(76,141,255,0.14);
+    --success:#3FBE7A;
+    --success-soft:rgba(63,190,122,0.14);
     --danger:#E27871;
     --danger-soft:rgba(226,120,113,0.14);
     --shadow:0 8px 24px rgba(0,0,0,0.28);
@@ -44,10 +49,14 @@
     --ink:#1B1F27;
     --ink-soft:#666E7C;
     --line:#E3E7EC;
-    --day:#B9750F;
+    --day:#1D5FD1;
     --night:#5750C4;
-    --day-soft:rgba(185,117,15,0.10);
+    --day-soft:rgba(29,95,209,0.10);
     --night-soft:rgba(87,80,196,0.10);
+    --primary:#1D5FD1;
+    --primary-soft:rgba(29,95,209,0.10);
+    --success:#1F9D5C;
+    --success-soft:rgba(31,157,92,0.10);
     --danger:#C0392B;
     --danger-soft:rgba(192,57,43,0.10);
     --shadow:0 4px 16px rgba(20,30,50,0.08);
@@ -57,7 +66,7 @@
   body{
     margin:0;
     background:
-      radial-gradient(ellipse 900px 500px at 50% -10%, var(--night-soft), transparent),
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--primary-soft), transparent),
       var(--bg);
     color:var(--ink);
     font-family:var(--font-ui);
@@ -75,7 +84,7 @@
     flex-wrap:wrap;
   }
   .header-left{ display:flex; align-items:center; gap:16px; min-width:0; }
-  .dial{ flex-shrink:0; filter:drop-shadow(0 0 14px var(--night-soft)); }
+  .dial{ flex-shrink:0; filter:drop-shadow(0 0 14px var(--primary-soft)); }
   h1{
     font-size:21px;
     font-weight:700;
@@ -94,7 +103,7 @@
     border-radius:20px; padding:8px 14px; font-family:var(--font-mono); font-size:12px;
     display:flex; align-items:center; gap:6px; cursor:pointer; flex-shrink:0;
   }
-  .theme-toggle:hover{ border-color:var(--night); }
+  .theme-toggle:hover{ border-color:var(--primary); }
 
   .card{
     background:var(--card);
@@ -138,7 +147,7 @@
     color:var(--ink);
     background:var(--card-2);
   }
-  input:focus, select:focus{ outline:2px solid var(--night); outline-offset:1px; border-color:var(--night); }
+  input:focus, select:focus{ outline:2px solid var(--primary); outline-offset:1px; border-color:var(--primary); }
   input::placeholder{ color:var(--ink-soft); opacity:.6; }
 
   .break-item{ display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
@@ -170,7 +179,7 @@
   html[data-theme="light"] .btn-primary:hover{ background:#000000; }
   .btn-primary:active{ transform:scale(.98); }
   .btn-ghost{ background:var(--card-2); color:var(--ink); border:1px solid var(--line); }
-  .btn-ghost:hover{ border-color:var(--night); color:var(--night); }
+  .btn-ghost:hover{ border-color:var(--primary); color:var(--primary); }
   .btn-small{ padding:9px 12px; font-size:12.5px; min-height:auto; }
   .btn-row{ display:flex; gap:10px; flex-wrap:wrap; }
 
@@ -180,13 +189,19 @@
     width:38px; height:38px; border-radius:9px; font-size:16px;
     display:flex; align-items:center; justify-content:center; padding:0;
   }
-  .month-nav .arrow:hover{ border-color:var(--night); color:var(--night); }
+  .month-nav .arrow:hover{ border-color:var(--primary); color:var(--primary); }
   .month-nav .label{ font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--ink); }
 
   .summary-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
   .stat{ background:var(--card-2); border:1px solid var(--line); border-radius:9px; padding:12px 10px; min-width:0; }
   .stat .label{ font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;}
   .stat .val{ font-family:var(--font-mono); font-size:17px; font-weight:700; word-break:break-word; }
+  .tax-sub{ font-family:var(--font-mono); font-size:10.5px; color:var(--ink-soft); margin-top:4px; }
+  .security-badge{
+    display:inline-block; font-family:var(--font-mono); font-size:11px;
+    background:var(--danger-soft); color:var(--danger); border:1px solid var(--danger);
+    border-radius:20px; padding:5px 12px; margin-bottom:14px;
+  }
   .stat.total .val{ color:var(--ink); }
   .stat.day .val{ color:var(--day); }
   .stat.night .val{ color:var(--night); }
@@ -331,6 +346,7 @@
     <span><span data-i18n="profile_label">Профиль: </span><span id="profileEmail" style="color:var(--ink);"></span></span>
     <button type="button" id="switchProfileBtn" class="btn-ghost btn-small" data-i18n="switch_profile_btn">Профильді ауыстыру</button>
   </div>
+  <div class="security-badge" id="securityBadge" data-i18n="security_local">⚠️ Деректер тек осы браузерде</div>
 
   <div id="saveStatus" class="status-banner"></div>
   <div id="undoBanner" style="display:none; align-items:center; justify-content:space-between; gap:12px; background:var(--card-2); border:1px solid var(--night); border-radius:9px; padding:10px 14px; margin-bottom:16px; font-family:var(--font-mono); font-size:12.5px;">
@@ -432,6 +448,7 @@
       <div class="stat total">
         <div class="label" data-i18n="stat_total">Барлық сома</div>
         <div class="val" id="sumTotal">0 ₸</div>
+        <div class="tax-sub" id="taxSub"></div>
       </div>
       <div class="stat day">
         <div class="label" data-i18n="stat_day">Күндізгі</div>
@@ -448,11 +465,17 @@
     </div>
     <div class="goal-row">
       <label style="margin:0;" data-i18n="goal_label_text">Айлық мақсат:</label>
-      <input type="number" id="goalInput" data-i18n-placeholder="goal_placeholder" placeholder="мысалы 300000" inputmode="numeric">
+      <input type="text" id="goalName" data-i18n-placeholder="goal_name_placeholder" placeholder="мысалы: Жаңа телефон" style="flex:1; min-width:110px;">
+      <input type="number" id="goalInput" data-i18n-placeholder="goal_placeholder" placeholder="мысалы 300000" inputmode="numeric" style="max-width:130px;">
       <button type="button" id="goalSaveBtn" class="btn-ghost btn-small" data-i18n="save_btn">Сақтау</button>
     </div>
     <div class="progress-track"><div class="progress-fill" id="goalFill" style="width:0%;"></div></div>
     <div class="goal-label" id="goalLabel">Мақсат қойылмаған</div>
+    <div class="goal-row" style="margin-top:10px;">
+      <label style="margin:0;" data-i18n="tax_label">Салық болжамы (%):</label>
+      <input type="number" id="taxRateInput" min="0" max="50" inputmode="numeric" style="max-width:90px;" placeholder="10">
+      <button type="button" id="taxSaveBtn" class="btn-ghost btn-small" data-i18n="save_btn">Сақтау</button>
+    </div>
 
     <div class="plan-box" id="planBox">
       <div class="plan-row">
@@ -511,6 +534,7 @@
         <button type="button" id="importBtn" class="btn-ghost btn-small" data-i18n="import_btn">Импорт</button>
         <input type="file" id="importFile" accept=".xlsx,.csv" style="display:none;">
         <button type="button" id="csvBtn" class="btn-ghost btn-small" data-i18n="export_btn">Excel жүктеу</button>
+        <button type="button" id="pdfBtn" class="btn-ghost btn-small" data-i18n="pdf_btn">PDF жүктеу</button>
       </div>
     </div>
     <div id="entries"></div>
@@ -523,6 +547,9 @@
 function getStoredTheme(){ return localStorage.getItem('workpay-theme') || 'auto'; }
 function resolveTheme(pref){
   if(pref==='auto'){
+    const hour = new Date().getHours();
+    const isNightTime = (hour>=22 || hour<7);
+    if(isNightTime) return 'dark';
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
   return pref;
@@ -551,6 +578,7 @@ if(window.matchMedia){
   });
 }
 applyTheme();
+setInterval(()=>{ if(getStoredTheme()==='auto') applyTheme(); }, 5*60*1000);
 
 /* ================= LANGUAGE (KZ / RU) ================= */
 const I18N = {
@@ -617,6 +645,11 @@ const I18N = {
     payday_today:'🎉 Бүгін — жалақы күні!',
     payday_days_left:' күн қалды',
     payday_tomorrow:'Ертең — жалақы күні!',
+    goal_name_placeholder:'мысалы: Жаңа телефон',
+    tax_label:'Салық болжамы (%):',
+    security_local:'⚠️ Деректер тек осы браузерде',
+    tax_sub_prefix:'Салық шегерілгеннен кейін (болжам): ',
+    pdf_btn:'PDF жүктеу',
   },
   ru: {
     login_title:'Вход',
@@ -681,6 +714,11 @@ const I18N = {
     payday_today:'🎉 Сегодня день зарплаты!',
     payday_days_left:' дн. осталось',
     payday_tomorrow:'Завтра день зарплаты!',
+    goal_name_placeholder:'например: Новый телефон',
+    tax_label:'Оценка налога (%):',
+    security_local:'⚠️ Данные только в этом браузере',
+    tax_sub_prefix:'После вычета налога (оценка): ',
+    pdf_btn:'Скачать PDF',
   }
 };
 function getStoredLang(){ return localStorage.getItem('workpay-lang') || 'kk'; }
@@ -772,29 +810,58 @@ function formatTimeDigits(digits){
   if(digits.length>2) return digits.slice(0,2)+':'+digits.slice(2);
   return digits;
 }
-function reformatPreservingCursor(el, formatFn, maxDigits){
-  const start = el.selectionStart===null ? el.value.length : el.selectionStart;
-  const digitsBeforeCursor = el.value.slice(0, start).replace(/\D/g,'').length;
-  const digits = el.value.replace(/\D/g,'').slice(0, maxDigits);
+function posToDigitIndex(value, pos){
+  let cnt=0;
+  for(let i=0;i<pos && i<value.length;i++){ if(/\d/.test(value[i])) cnt++; }
+  return cnt;
+}
+function applyMasked(el, digits, formatFn, digitCursor){
   const formatted = formatFn(digits);
   el.value = formatted;
-  let pos = 0, count = 0;
-  while(pos < formatted.length && count < digitsBeforeCursor){
-    if(/\d/.test(formatted[pos])) count++;
-    pos++;
-  }
-  el.setSelectionRange(pos, pos);
+  let pos=0, cnt=0;
+  while(pos<formatted.length && cnt<digitCursor){ if(/\d/.test(formatted[pos])) cnt++; pos++; }
+  el.setSelectionRange(pos,pos);
 }
-function attachDateAutoFormat(el){
+function attachMaskedInput(el, maxDigits, formatFn){
+  el.addEventListener('beforeinput', (e)=>{
+    const start = el.selectionStart, end = el.selectionEnd;
+    const curDigits = el.value.replace(/\D/g,'');
+    const dStart = posToDigitIndex(el.value, start);
+    const dEnd = posToDigitIndex(el.value, end);
+
+    if(e.inputType==='deleteContentBackward'){
+      e.preventDefault();
+      let newDigits, newCursor;
+      if(dStart!==dEnd){ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dEnd); newCursor = dStart; }
+      else{ newDigits = curDigits.slice(0,Math.max(0,dStart-1))+curDigits.slice(dStart); newCursor = Math.max(0,dStart-1); }
+      applyMasked(el, newDigits, formatFn, newCursor);
+    } else if(e.inputType==='deleteContentForward'){
+      e.preventDefault();
+      let newDigits, newCursor;
+      if(dStart!==dEnd){ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dEnd); newCursor = dStart; }
+      else{ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dStart+1); newCursor = dStart; }
+      applyMasked(el, newDigits, formatFn, newCursor);
+    } else if(e.data && /\d/.test(e.data)){
+      e.preventDefault();
+      const inserted = e.data.replace(/\D/g,'');
+      const newDigits = (curDigits.slice(0,dStart)+inserted+curDigits.slice(dEnd)).slice(0,maxDigits);
+      applyMasked(el, newDigits, formatFn, Math.min(dStart+inserted.length, maxDigits));
+    } else if(e.data!==null){
+      // сан емес таңба — елемей тастаймыз (пробел, әріп, т.б.)
+      e.preventDefault();
+    }
+  });
+  // сақтық үшін: кейбір мобильді пернетақталар beforeinput-ты толық қолдамаса,
+  // қарапайым input оқиғасымен де тазалап отырамыз
   el.addEventListener('input', ()=>{
-    reformatPreservingCursor(el, formatDateDigits, 8);
+    if(/[^\d.:]/.test(el.value) || el.value.replace(/\D/g,'').length>maxDigits){
+      const digits = el.value.replace(/\D/g,'').slice(0,maxDigits);
+      applyMasked(el, digits, formatFn, digits.length);
+    }
   });
 }
-function attachTimeAutoFormat(el){
-  el.addEventListener('input', ()=>{
-    reformatPreservingCursor(el, formatTimeDigits, 4);
-  });
-}
+function attachDateAutoFormat(el){ attachMaskedInput(el, 8, formatDateDigits); }
+function attachTimeAutoFormat(el){ attachMaskedInput(el, 4, formatTimeDigits); }
 ['fdate'].forEach(id=>attachDateAutoFormat(document.getElementById(id)));
 ['fstart','fend','planStart','reminderTime'].forEach(id=>attachTimeAutoFormat(document.getElementById(id)));
 
@@ -887,6 +954,9 @@ function drawChart(monthEntries){
 }
 
 /* ================= GOAL + PLAN ================= */
+let goalName = '';
+let taxRate = 10;
+
 function updateGoalUI(totalPay){
   const label = document.getElementById('goalLabel');
   const fill = document.getElementById('goalFill');
@@ -897,7 +967,16 @@ function updateGoalUI(totalPay){
   }
   const pct = Math.min(100, (totalPay/goal)*100);
   fill.style.width = pct.toFixed(1)+'%';
-  label.textContent = fmt(totalPay)+' ₸ / '+fmt(goal)+' ₸ ('+pct.toFixed(0)+'%)';
+  const namePart = goalName ? (goalName+' — ') : '';
+  label.textContent = namePart+fmt(totalPay)+' ₸ / '+fmt(goal)+' ₸ ('+pct.toFixed(0)+'%)';
+}
+
+function updateTaxSub(totalPay){
+  const el = document.getElementById('taxSub');
+  if(!el) return;
+  if(!taxRate || taxRate<=0){ el.textContent = ''; return; }
+  const afterTax = totalPay * (1 - taxRate/100);
+  el.textContent = t('tax_sub_prefix') + fmt(afterTax) + ' ₸';
 }
 
 function updatePlan(totalPay){
@@ -999,6 +1078,7 @@ function render(){
   document.getElementById('sumNight').textContent = fmtH(totalNight)+' сағ';
 
   updateGoalUI(totalPay);
+  updateTaxSub(totalPay);
   updatePlan(totalPay);
   drawChart(monthEntries);
  }catch(err){
@@ -1018,6 +1098,13 @@ function loadProfileData(){
     goal = raw ? Number(JSON.parse(raw)) : 0;
   }catch(err){ goal = 0; }
   document.getElementById('goalInput').value = goal || '';
+
+  goalName = lsGet(keyFor('goal-name')) || '';
+  document.getElementById('goalName').value = goalName;
+
+  const rawTax = lsGet(keyFor('tax-rate'));
+  taxRate = rawTax!==null && rawTax!=='' ? Number(rawTax) : 10;
+  document.getElementById('taxRateInput').value = taxRate;
 
   DAY_RATE = 1265; NIGHT_RATE = 1890; NIGHT_HOUR = 22;
   try{
@@ -1378,7 +1465,16 @@ document.getElementById('nextMonth').addEventListener('click', ()=>{
 document.getElementById('goalSaveBtn').addEventListener('click', ()=>{
   const v = Number(document.getElementById('goalInput').value);
   goal = isNaN(v) ? 0 : v;
+  goalName = document.getElementById('goalName').value.trim();
   saveGoal();
+  lsSet(keyFor('goal-name'), goalName);
+  render();
+});
+
+document.getElementById('taxSaveBtn').addEventListener('click', ()=>{
+  const v = Number(document.getElementById('taxRateInput').value);
+  taxRate = (v>=0 && v<=50) ? v : 10;
+  lsSet(keyFor('tax-rate'), String(taxRate));
   render();
 });
 
@@ -1416,10 +1512,98 @@ document.getElementById('csvBtn').addEventListener('click', ()=>{
   XLSX.writeFile(wb, 'workpay_'+ymKey(viewYear,viewMonth)+'.xlsx');
 });
 
+document.getElementById('pdfBtn').addEventListener('click', ()=>{
+  try{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const monthEntries = [...monthEntriesList()].sort((a,b)=>a.date.localeCompare(b.date));
+    const headers = t('xlsx_headers');
+
+    doc.setFontSize(16);
+    doc.text('WorkPay — ' + t('month_names')[viewMonth] + ' ' + viewYear, 14, 18);
+    doc.setFontSize(10);
+    doc.text(document.getElementById('profileEmail').textContent || '', 14, 25);
+
+    let y = 36;
+    const colX = [14, 42, 62, 82, 112, 142, 168];
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'bold');
+    headers.forEach((h,i)=> doc.text(String(h), colX[i], y));
+    doc.setFont(undefined, 'normal');
+    y += 6;
+    doc.setDrawColor(200);
+    doc.line(14, y-4, 196, y-4);
+
+    let totalPay = 0;
+    monthEntries.forEach(e=>{
+      const c = calcEntry(e);
+      totalPay += c.pay;
+      if(y > 280){ doc.addPage(); y = 20; }
+      const rowVals = [isoToDate(e.date), e.start, e.end, String(c.breakMin), fmtH(c.dayHours), fmtH(c.nightHours), fmt(Math.round(c.pay))];
+      rowVals.forEach((v,i)=> doc.text(v, colX[i], y));
+      y += 6;
+    });
+
+    y += 2;
+    doc.line(14, y-4, 196, y-4);
+    doc.setFont(undefined, 'bold');
+    doc.text(t('xlsx_total')+' '+fmt(Math.round(totalPay))+' ₸', 142, y);
+    doc.setFont(undefined, 'normal');
+
+    if(taxRate>0){
+      y += 8;
+      doc.setFontSize(9);
+      doc.text(t('tax_sub_prefix')+fmt(Math.round(totalPay*(1-taxRate/100)))+' ₸', 14, y);
+    }
+
+    doc.save('workpay_'+ymKey(viewYear,viewMonth)+'.pdf');
+  }catch(err){
+    alert(t('import_err')); // жалпы қате хабары (интернет/CDN жүктелмеген болуы мүмкін)
+  }
+});
+
 /* ================= EXCEL/CSV IMPORT ================= */
 document.getElementById('importBtn').addEventListener('click', ()=>{
   document.getElementById('importFile').click();
 });
+function excelSerialToDate(serial){
+  // Excel/Excel-uyimdas сериялық санды JS Date-ке айналдыру (1900 жүйесі)
+  const utcDays = Math.floor(serial - 25569);
+  const utcMs = utcDays * 86400 * 1000;
+  return new Date(utcMs);
+}
+function parseImportDate(v){
+  if(v instanceof Date && !isNaN(v)){
+    return v.getFullYear()+'-'+String(v.getMonth()+1).padStart(2,'0')+'-'+String(v.getDate()).padStart(2,'0');
+  }
+  if(typeof v === 'number'){
+    const d = excelSerialToDate(v);
+    if(!isNaN(d)) return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return null;
+  }
+  const s = String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if(/^\d{2}\.\d{2}\.\d{4}$/.test(s)) return dateToISO(s);
+  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
+    const [m,d,y] = s.split('/');
+    return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  }
+  return null;
+}
+function parseImportTime(v){
+  if(v instanceof Date && !isNaN(v)){
+    return String(v.getHours()).padStart(2,'0')+':'+String(v.getMinutes()).padStart(2,'0');
+  }
+  if(typeof v === 'number'){
+    // Excel уақыты — тәуліктің үлесі (мысалы 0.375 = 09:00)
+    const totalMin = Math.round(v * 24 * 60);
+    const h = Math.floor(totalMin/60)%24, m = totalMin%60;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  }
+  const s = String(v).trim();
+  return validTime(s) ? s : null;
+}
+
 document.getElementById('importFile').addEventListener('change', (ev)=>{
   const file = ev.target.files[0];
   if(!file) return;
@@ -1427,19 +1611,18 @@ document.getElementById('importFile').addEventListener('change', (ev)=>{
   reader.onload = (e)=>{
     try{
       const data = new Uint8Array(e.target.result);
-      const wb = XLSX.read(data, {type:'array'});
+      const wb = XLSX.read(data, {type:'array', cellDates:true});
       const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, {header:1});
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, raw:true});
       let imported = 0;
       for(let i=1; i<rows.length; i++){
         const r = rows[i];
-        if(!r || !r[0] || !r[1] || !r[2]) continue;
-        const dateStr = String(r[0]);
-        const iso = dateStr.includes('.') ? dateToISO(dateStr) : dateStr;
-        if(!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) continue;
-        const start = String(r[1]);
-        const end = String(r[2]);
-        if(!validTime(start) || !validTime(end)) continue;
+        if(!r || r[0]===undefined || r[1]===undefined || r[2]===undefined) continue;
+        const iso = parseImportDate(r[0]);
+        if(!iso) continue;
+        const start = parseImportTime(r[1]);
+        const end = parseImportTime(r[2]);
+        if(!start || !end) continue;
         const breakMin = Number(r[3])||0;
         const exists = entries.some(x=>x.date===iso && x.start===start && x.end===end);
         if(exists) continue;
