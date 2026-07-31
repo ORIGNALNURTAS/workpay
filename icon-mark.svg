@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B9AFF"/>
+      <stop offset="100%" stop-color="#3D74E0"/>
+    </linearGradient>
+    <linearGradient id="nightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9C97F5"/>
+      <stop offset="100%" stop-color="#6A63D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App-icon background -->
+  <rect width="512" height="512" rx="112" fill="#0E1116"/>
+
+  <!-- Coin -->
+  <circle cx="256" cy="256" r="188" fill="#171B22" stroke="#262C36" stroke-width="4"/>
+
+  <!-- Day half (upper-left arc) -->
+  <path d="M 256 68 A 188 188 0 0 1 444 256 L 256 256 Z" fill="url(#dayGrad)"/>
+  <!-- Night half (lower-right arc) -->
+  <path d="M 444 256 A 188 188 0 0 1 256 444 L 256 256 Z" fill="url(#nightGrad)"/>
+  <!-- remaining two quarters, softer tone of each -->
+  <path d="M 256 444 A 188 188 0 0 1 68 256 L 256 256 Z" fill="#3D74E0" opacity="0.55"/>
+  <path d="M 68 256 A 188 188 0 0 1 256 68 L 256 256 Z" fill="#6A63D8" opacity="0.55"/>
+
+  <!-- inner disc -->
+  <circle cx="256" cy="256" r="132" fill="#0E1116"/>
+
+  <!-- Tenge glyph, centered, clean geometric -->
+  <g fill="#EDEFF3">
+    <rect x="222" y="176" width="68" height="26" rx="6"/>
+    <rect x="222" y="222" width="68" height="26" rx="6"/>
+    <rect x="243" y="176" width="26" height="160" rx="6"/>
+  </g>
+</svg>

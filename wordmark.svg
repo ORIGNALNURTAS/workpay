@@ -1,0 +1,31 @@
+<svg width="720" height="200" viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dayGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B9AFF"/>
+      <stop offset="100%" stop-color="#3D74E0"/>
+    </linearGradient>
+    <linearGradient id="nightGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9C97F5"/>
+      <stop offset="100%" stop-color="#6A63D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon mark, left side -->
+  <g transform="translate(20,20) scale(0.3125)">
+    <circle cx="256" cy="256" r="188" fill="#171B22" stroke="#262C36" stroke-width="4"/>
+    <path d="M 256 68 A 188 188 0 0 1 444 256 L 256 256 Z" fill="url(#dayGrad2)"/>
+    <path d="M 444 256 A 188 188 0 0 1 256 444 L 256 256 Z" fill="url(#nightGrad2)"/>
+    <path d="M 256 444 A 188 188 0 0 1 68 256 L 256 256 Z" fill="#3D74E0" opacity="0.55"/>
+    <path d="M 68 256 A 188 188 0 0 1 256 68 L 256 256 Z" fill="#6A63D8" opacity="0.55"/>
+    <circle cx="256" cy="256" r="132" fill="#0E1116"/>
+    <g fill="#EDEFF3">
+      <rect x="222" y="176" width="68" height="26" rx="6"/>
+      <rect x="222" y="222" width="68" height="26" rx="6"/>
+      <rect x="243" y="176" width="26" height="160" rx="6"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="200" y="100" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="64" font-weight="700" fill="#EDEFF3">Work<tspan fill="#5B9AFF">Pay</tspan></text>
+  <text x="202" y="140" font-family="'IBM Plex Mono', monospace" font-size="20" fill="#8B93A3">жұмыс уақыты · жалақы</text>
+</svg>
