@@ -161,6 +161,13 @@
   }
   .break-item input[type=checkbox]{ width:auto; accent-color:var(--night); min-width:18px; min-height:18px; }
   .break-select{ flex:1; min-width:140px; }
+  .seg-wrap{ display:flex; align-items:center; gap:4px; }
+  .seg-box{
+    width:52px; text-align:center; padding:11px 4px; flex:0 0 auto;
+    font-variant-numeric:tabular-nums;
+  }
+  .seg-box.seg-year{ width:76px; }
+  .seg-sep{ font-family:var(--font-mono); font-size:16px; color:var(--ink-soft); font-weight:700; }
   select:disabled{ opacity:.4; }
 
   button{
@@ -418,30 +425,61 @@
     <h2 data-i18n="new_entry_title">Жаңа жазба қосу</h2>
     <div class="form-like">
       <div>
-        <label for="fdate" data-i18n="date_label">Күні (КК.АА.ЖЖЖЖ)</label>
-        <input type="text" id="fdate" inputmode="numeric" placeholder="КК.АА.ЖЖЖЖ" maxlength="10">
+        <label for="fdate_d" data-i18n="date_label">Күні (КК.АА.ЖЖЖЖ)</label>
+        <div class="seg-wrap">
+          <input type="text" id="fdate_d" class="seg-box" inputmode="numeric" maxlength="2" placeholder="КК">
+          <span class="seg-sep">.</span>
+          <input type="text" id="fdate_m" class="seg-box" inputmode="numeric" maxlength="2" placeholder="АА">
+          <span class="seg-sep">.</span>
+          <input type="text" id="fdate_y" class="seg-box seg-year" inputmode="numeric" maxlength="4" placeholder="ЖЖЖЖ">
+          <input type="hidden" id="fdate">
+        </div>
       </div>
       <div class="row2">
         <div>
-          <label for="fstart" data-i18n="start_label">Келген уақыт (СС:ММ)</label>
-          <input type="text" id="fstart" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
+          <label for="fstart_h" data-i18n="start_label">Келген уақыт (СС:ММ)</label>
+          <div class="seg-wrap">
+            <input type="text" id="fstart_h" class="seg-box" inputmode="numeric" maxlength="2" placeholder="СС">
+            <span class="seg-sep">:</span>
+            <input type="text" id="fstart_mi" class="seg-box" inputmode="numeric" maxlength="2" placeholder="ММ">
+            <input type="hidden" id="fstart">
+          </div>
         </div>
         <div>
-          <label for="fend" data-i18n="end_label">Кеткен уақыт (СС:ММ)</label>
-          <input type="text" id="fend" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
+          <label for="fend_h" data-i18n="end_label">Кеткен уақыт (СС:ММ)</label>
+          <div class="seg-wrap">
+            <input type="text" id="fend_h" class="seg-box" inputmode="numeric" maxlength="2" placeholder="СС">
+            <span class="seg-sep">:</span>
+            <input type="text" id="fend_mi" class="seg-box" inputmode="numeric" maxlength="2" placeholder="ММ">
+            <input type="hidden" id="fend">
+          </div>
         </div>
       </div>
       <div>
-        <label data-i18n="breaks_label">Үзілістер (30 минуттан, төленбейді)</label>
+        <label data-i18n="breaks_label">Үзілістер (төленбейді)</label>
         <div class="break-item">
-          <label class="chk"><input type="checkbox" id="fbreak1"> <span data-i18n="break1_label">1-үзіліс (30 мин)</span></label>
+          <span data-i18n="break1_label" style="min-width:78px; font-family:var(--font-mono); font-size:12.5px;">1-үзіліс:</span>
+          <select id="fbreak1min" class="break-select" style="max-width:100px;">
+            <option value="0" data-i18n="break_none">Жоқ</option>
+            <option value="15">15 мин</option>
+            <option value="30">30 мин</option>
+            <option value="45">45 мин</option>
+            <option value="60">60 мин</option>
+          </select>
           <select id="fbreak1time" class="break-select">
             <option value="before" data-i18n="break_before">22:00 дейін шықтым</option>
             <option value="after" data-i18n="break_after">22:00 кейін шықтым</option>
           </select>
         </div>
         <div class="break-item">
-          <label class="chk"><input type="checkbox" id="fbreak2"> <span data-i18n="break2_label">2-үзіліс (30 мин)</span></label>
+          <span data-i18n="break2_label" style="min-width:78px; font-family:var(--font-mono); font-size:12.5px;">2-үзіліс:</span>
+          <select id="fbreak2min" class="break-select" style="max-width:100px;">
+            <option value="0" data-i18n="break_none">Жоқ</option>
+            <option value="15">15 мин</option>
+            <option value="30">30 мин</option>
+            <option value="45">45 мин</option>
+            <option value="60">60 мин</option>
+          </select>
           <select id="fbreak2time" class="break-select">
             <option value="before" data-i18n="break_before">22:00 дейін шықтым</option>
             <option value="after" data-i18n="break_after">22:00 кейін шықтым</option>
@@ -467,7 +505,6 @@
       <div class="stat total">
         <div class="label" data-i18n="stat_total">Барлық сома</div>
         <div class="val" id="sumTotal">0 ₸</div>
-        <div class="tax-sub" id="taxSub"></div>
       </div>
       <div class="stat day">
         <div class="label" data-i18n="stat_day">Күндізгі</div>
@@ -490,11 +527,6 @@
     </div>
     <div class="progress-track"><div class="progress-fill" id="goalFill" style="width:0%;"></div></div>
     <div class="goal-label" id="goalLabel">Мақсат қойылмаған</div>
-    <div class="goal-row" style="margin-top:10px;">
-      <label style="margin:0;" data-i18n="tax_label">Салық болжамы (%):</label>
-      <input type="number" id="taxRateInput" min="0" max="50" inputmode="numeric" style="max-width:90px;" placeholder="10">
-      <button type="button" id="taxSaveBtn" class="btn-ghost btn-small" data-i18n="save_btn">Сақтау</button>
-    </div>
 
     <div class="plan-box" id="planBox">
       <div class="plan-row">
@@ -516,7 +548,12 @@
         </div>
         <div>
           <label style="margin:0 0 4px;" data-i18n="plan_start_label">Шығатын уақыт (СС:ММ)</label>
-          <input type="text" id="planStart" inputmode="numeric" placeholder="СС:ММ" maxlength="5">
+          <div class="seg-wrap">
+            <input type="text" id="planStart_h" class="seg-box" inputmode="numeric" maxlength="2" placeholder="СС">
+            <span class="seg-sep">:</span>
+            <input type="text" id="planStart_mi" class="seg-box" inputmode="numeric" maxlength="2" placeholder="ММ">
+            <input type="hidden" id="planStart">
+          </div>
         </div>
       </div>
       <div class="plan-result" id="planResult"></div>
@@ -532,7 +569,12 @@
     </p>
     <div class="break-item">
       <label class="chk"><input type="checkbox" id="reminderEnabled"> <span data-i18n="reminder_enable">Ескерту қосу</span></label>
-      <input type="text" id="reminderTime" inputmode="numeric" placeholder="СС:ММ" maxlength="5" style="max-width:110px;">
+      <div class="seg-wrap">
+        <input type="text" id="reminderTime_h" class="seg-box" inputmode="numeric" maxlength="2" placeholder="СС">
+        <span class="seg-sep">:</span>
+        <input type="text" id="reminderTime_mi" class="seg-box" inputmode="numeric" maxlength="2" placeholder="ММ">
+        <input type="hidden" id="reminderTime">
+      </div>
     </div>
     <div class="btn-row" style="margin-top:10px;">
       <button type="button" id="reminderSaveBtn" class="btn-ghost btn-small" data-i18n="reminder_save_btn">Сақтау</button>
@@ -652,8 +694,8 @@ const I18N = {
     timer_status_day:'Күндізгі ставкамен есептеліп жатыр', timer_status_night:'Түнгі ставкамен есептеліп жатыр',
     new_entry_title:'Жаңа жазба қосу',
     date_label:'Күні (КК.АА.ЖЖЖЖ)', start_label:'Келген уақыт (СС:ММ)', end_label:'Кеткен уақыт (СС:ММ)',
-    breaks_label:'Үзілістер (30 минуттан, төленбейді)',
-    break1_label:'1-үзіліс (30 мин)', break2_label:'2-үзіліс (30 мин)',
+    breaks_label:'Үзілістер (төленбейді)',
+    break1_label:'1-үзіліс:', break2_label:'2-үзіліс:', break_none:'Жоқ',
     break_before:'22:00 дейін шықтым', break_after:'22:00 кейін шықтым',
     save_btn:'Сақтау', save_btn_edit:'Өзгерісті сақтау', clear_btn:'Тазалау', cancel_btn:'Болдырмау',
     err_fill:'Күні, келген және кеткен уақытты толтырыңыз.',
@@ -664,7 +706,6 @@ const I18N = {
     legend_before:'22:00 дейін — ', legend_after:'22:00 кейін — ', per_hour:' ₸/сағ',
     goal_label_text:'Айлық мақсат:', goal_placeholder:'мысалы 300000', goal_name_placeholder:'мысалы: Жаңа телефон',
     goal_not_set:'Мақсат қойылмаған',
-    tax_label:'Салық болжамы (%):', tax_sub_prefix:'Салық шегерілгеннен кейін (болжам): ',
     plan_shift_label:'Смена ұзақтығы', plan_start_label:'Шығатын уақыт (СС:ММ)',
     hours_unit:'сағат',
     plan_no_goal:'Жоспарды көру үшін алдымен мақсат сомасын енгізіп сақтаңыз.',
@@ -673,6 +714,9 @@ const I18N = {
     plan_remaining:'Қалды: ', plan_at:'-де шығып, ', plan_hours_word:' сағаттан', plan_work:' жұмыс істесеңіз — бір смена шамамен ',
     plan_need:'Мақсатқа жету үшін тағы ', plan_days_word:' күн', plan_approx:' (шамамен ', plan_hours_word2:' сағат) жұмыс істеу керек.',
     plan_warn:'⚠ Бұл айда қалған ', plan_warn2:' күнге сыймайды — ұзағырақ смена немесе қосымша күн керек болады.',
+    plan_smart_intro:'Мақсатыңа жету үшін тағы ', plan_smart_hours:' сағат жұмыс істеу керек. Мысалы: ',
+    plan_day1:'ертең', plan_day2:'келесі күні', plan_day3:'одан кейінгі күні',
+    plan_smart_h:' сағ', plan_smart_join:', ', plan_smart_end:' жұмыс істесең, жетесің.',
     payday_title:'Жалақы күні', payday_label:'Айдың нешесінде (1-31)',
     payday_not_set:'Күн белгіленбеген', payday_today:'🎉 Бүгін — жалақы күні!',
     payday_days_left:' күн қалды', payday_tomorrow:'Ертең — жалақы күні!',
@@ -718,8 +762,8 @@ const I18N = {
     timer_status_day:'Считается по дневной ставке', timer_status_night:'Считается по ночной ставке',
     new_entry_title:'Добавить запись',
     date_label:'Дата (ДД.ММ.ГГГГ)', start_label:'Время прихода (ЧЧ:ММ)', end_label:'Время ухода (ЧЧ:ММ)',
-    breaks_label:'Перерывы (по 30 минут, не оплачиваются)',
-    break1_label:'1-й перерыв (30 мин)', break2_label:'2-й перерыв (30 мин)',
+    breaks_label:'Перерывы (не оплачиваются)',
+    break1_label:'1-й перерыв:', break2_label:'2-й перерыв:', break_none:'Нет',
     break_before:'вышел до 22:00', break_after:'вышел после 22:00',
     save_btn:'Сохранить', save_btn_edit:'Сохранить изменения', clear_btn:'Очистить', cancel_btn:'Отмена',
     err_fill:'Заполните дату, время прихода и ухода.',
@@ -730,7 +774,6 @@ const I18N = {
     legend_before:'До 22:00 — ', legend_after:'После 22:00 — ', per_hour:' ₸/ч',
     goal_label_text:'Цель на месяц:', goal_placeholder:'например 300000', goal_name_placeholder:'например: Новый телефон',
     goal_not_set:'Цель не установлена',
-    tax_label:'Оценка налога (%):', tax_sub_prefix:'После вычета налога (оценка): ',
     plan_shift_label:'Длительность смены', plan_start_label:'Время выхода (ЧЧ:ММ)',
     hours_unit:'ч',
     plan_no_goal:'Чтобы увидеть план, сначала введите и сохраните сумму цели.',
@@ -739,6 +782,9 @@ const I18N = {
     plan_remaining:'Осталось: ', plan_at:', выходя в ', plan_hours_word:' часов', plan_work:' — одна смена примерно ',
     plan_need:'Чтобы достичь цели, нужно ещё ', plan_days_word:' дней', plan_approx:' (примерно ', plan_hours_word2:' часов) работы.',
     plan_warn:'⚠ Это не уместится в оставшиеся ', plan_warn2:' дней месяца — нужна смена подлиннее или больше дней.',
+    plan_smart_intro:'Чтобы достичь цели, нужно ещё ', plan_smart_hours:' часов работы. Например: ',
+    plan_day1:'завтра', plan_day2:'послезавтра', plan_day3:'через день после этого',
+    plan_smart_h:' ч', plan_smart_join:', ', plan_smart_end:' — и ты у цели.',
     payday_title:'День зарплаты', payday_label:'Число месяца (1-31)',
     payday_not_set:'День не установлен', payday_today:'🎉 Сегодня день зарплаты!',
     payday_days_left:' дн. осталось', payday_tomorrow:'Завтра день зарплаты!',
@@ -804,7 +850,7 @@ let DAY_RATE = 1265;
 let NIGHT_RATE = 1890;
 let NIGHT_HOUR = 22;
 let entries = [];
-let goal = 0, goalName = '', taxRate = 10, paydayDay = null;
+let goal = 0, goalName = '', paydayDay = null;
 let editingId = null;
 let currentUid = null;
 const today = new Date();
@@ -821,66 +867,74 @@ function minutesToTime(min){
   return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
 }
 
-/* ================= MASKED DATE/TIME INPUTS ================= */
-function formatDateDigits(digits){
-  if(digits.length>4) return digits.slice(0,2)+'.'+digits.slice(2,4)+'.'+digits.slice(4);
-  if(digits.length>2) return digits.slice(0,2)+'.'+digits.slice(2);
-  return digits;
-}
-function formatTimeDigits(digits){
-  if(digits.length>2) return digits.slice(0,2)+':'+digits.slice(2);
-  return digits;
-}
-function posToDigitIndex(value, pos){
-  let cnt=0;
-  for(let i=0;i<pos && i<value.length;i++){ if(/\d/.test(value[i])) cnt++; }
-  return cnt;
-}
-function applyMasked(el, digits, formatFn, digitCursor){
-  const formatted = formatFn(digits);
-  el.value = formatted;
-  let pos=0, cnt=0;
-  while(pos<formatted.length && cnt<digitCursor){ if(/\d/.test(formatted[pos])) cnt++; pos++; }
-  el.setSelectionRange(pos,pos);
-}
-function attachMaskedInput(el, maxDigits, formatFn){
-  el.addEventListener('beforeinput', (e)=>{
-    const start = el.selectionStart, end = el.selectionEnd;
-    const curDigits = el.value.replace(/\D/g,'');
-    const dStart = posToDigitIndex(el.value, start);
-    const dEnd = posToDigitIndex(el.value, end);
-    if(e.inputType==='deleteContentBackward'){
-      e.preventDefault();
-      let newDigits, newCursor;
-      if(dStart!==dEnd){ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dEnd); newCursor = dStart; }
-      else{ newDigits = curDigits.slice(0,Math.max(0,dStart-1))+curDigits.slice(dStart); newCursor = Math.max(0,dStart-1); }
-      applyMasked(el, newDigits, formatFn, newCursor);
-    } else if(e.inputType==='deleteContentForward'){
-      e.preventDefault();
-      let newDigits, newCursor;
-      if(dStart!==dEnd){ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dEnd); newCursor = dStart; }
-      else{ newDigits = curDigits.slice(0,dStart)+curDigits.slice(dStart+1); newCursor = dStart; }
-      applyMasked(el, newDigits, formatFn, newCursor);
-    } else if(e.data && /\d/.test(e.data)){
-      e.preventDefault();
-      const inserted = e.data.replace(/\D/g,'');
-      const newDigits = (curDigits.slice(0,dStart)+inserted+curDigits.slice(dEnd)).slice(0,maxDigits);
-      applyMasked(el, newDigits, formatFn, Math.min(dStart+inserted.length, maxDigits));
-    } else if(e.data!==null){
-      e.preventDefault();
-    }
-  });
-  el.addEventListener('input', ()=>{
-    if(/[^\d.:]/.test(el.value) || el.value.replace(/\D/g,'').length>maxDigits){
-      const digits = el.value.replace(/\D/g,'').slice(0,maxDigits);
-      applyMasked(el, digits, formatFn, digits.length);
-    }
+/* ================= SEGMENTED DATE/TIME INPUTS ================= */
+function setupDateSegments(prefix){
+  const d = document.getElementById(prefix+'_d');
+  const m = document.getElementById(prefix+'_m');
+  const y = document.getElementById(prefix+'_y');
+  const hidden = document.getElementById(prefix);
+  const boxes = [d,m,y];
+  function sync(){
+    hidden.value = (d.value.length===2 && m.value.length===2 && y.value.length===4) ? (d.value+'.'+m.value+'.'+y.value) : '';
+    hidden.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+  boxes.forEach((el,idx)=>{
+    const maxLen = el===y ? 4 : 2;
+    el.addEventListener('input', ()=>{
+      el.value = el.value.replace(/\D/g,'').slice(0,maxLen);
+      if(el.value.length>=maxLen && boxes[idx+1]) boxes[idx+1].focus();
+      sync();
+    });
+    el.addEventListener('keydown', (ev)=>{
+      if(ev.key==='Backspace' && el.value==='' && boxes[idx-1]){ boxes[idx-1].focus(); }
+    });
   });
 }
-function attachDateAutoFormat(el){ attachMaskedInput(el, 8, formatDateDigits); }
-function attachTimeAutoFormat(el){ attachMaskedInput(el, 4, formatTimeDigits); }
-['fdate'].forEach(id=>attachDateAutoFormat(document.getElementById(id)));
-['fstart','fend','planStart','reminderTime'].forEach(id=>attachTimeAutoFormat(document.getElementById(id)));
+function setDateSegments(prefix, dmy){
+  const d = document.getElementById(prefix+'_d');
+  const m = document.getElementById(prefix+'_m');
+  const y = document.getElementById(prefix+'_y');
+  const hidden = document.getElementById(prefix);
+  const parts = dmy ? dmy.split('.') : ['','',''];
+  d.value = parts[0]||''; m.value = parts[1]||''; y.value = parts[2]||'';
+  hidden.value = (d.value.length===2 && m.value.length===2 && y.value.length===4) ? (d.value+'.'+m.value+'.'+y.value) : '';
+}
+function setupTimeSegments(prefix){
+  const h = document.getElementById(prefix+'_h');
+  const mi = document.getElementById(prefix+'_mi');
+  const hidden = document.getElementById(prefix);
+  function sync(){
+    hidden.value = (h.value.length===2 && mi.value.length===2) ? (h.value+':'+mi.value) : '';
+    hidden.dispatchEvent(new Event('input', {bubbles:true}));
+    hidden.dispatchEvent(new Event('change', {bubbles:true}));
+  }
+  [h,mi].forEach((el,idx)=>{
+    el.addEventListener('input', ()=>{
+      el.value = el.value.replace(/\D/g,'').slice(0,2);
+      if(el.value.length>=2 && idx===0) mi.focus();
+      sync();
+    });
+    el.addEventListener('keydown', (ev)=>{
+      if(ev.key==='Backspace' && el.value==='' && idx===1) h.focus();
+    });
+  });
+}
+function setTimeSegments(prefix, hm){
+  const h = document.getElementById(prefix+'_h');
+  const mi = document.getElementById(prefix+'_mi');
+  const hidden = document.getElementById(prefix);
+  if(hm && /^\d{2}:\d{2}$/.test(hm)){
+    const [hh,mm] = hm.split(':');
+    h.value = hh; mi.value = mm;
+  } else { h.value=''; mi.value=''; }
+  hidden.value = (h.value.length===2 && mi.value.length===2) ? (h.value+':'+mi.value) : '';
+}
+
+setupDateSegments('fdate');
+setupTimeSegments('fstart');
+setupTimeSegments('fend');
+setupTimeSegments('planStart');
+setupTimeSegments('reminderTime');
 
 function dateToISO(v){
   const m = (v||'').match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
@@ -896,7 +950,96 @@ function isoToDate(v){
 }
 function validTime(v){ return /^([01]\d|2[0-3]):[0-5]\d$/.test(v||''); }
 
+/* ================= SEGMENTED DATE/TIME INPUTS =================
+   Пайдаланушы бүкіл өрісті өшірмей, тек керек ұяшықты (күн/ай/жыл
+   немесе сағат/минут) ғана өзгерте алады. Ішкі логика бұрынғыдай
+   жасырын input-тарда (fdate="ДД.ММ.ЖЖЖЖ", fstart/fend="СС:ММ")
+   сақталады — есептеу және Firestore коды өзгермейді. */
+function wireSegment(el, maxLen, nextEl, prevEl, onChange){
+  el.addEventListener('input', ()=>{
+    el.value = el.value.replace(/\D/g,'').slice(0,maxLen);
+    onChange();
+    if(el.value.length>=maxLen && nextEl){ nextEl.focus(); nextEl.select(); }
+  });
+  el.addEventListener('keydown', (e)=>{
+    if(e.key==='Backspace' && el.value==='' && prevEl){ prevEl.focus(); }
+  });
+  el.addEventListener('focus', ()=> el.select());
+}
+
+function getSegDateValue(prefix){
+  const d = document.getElementById(prefix+'_d').value;
+  const m = document.getElementById(prefix+'_m').value;
+  const y = document.getElementById(prefix+'_y').value;
+  return (d.length===2 && m.length===2 && y.length===4) ? (d+'.'+m+'.'+y) : '';
+}
+function setSegDateValue(prefix, ddmmyyyy){
+  const dEl = document.getElementById(prefix+'_d'), mEl = document.getElementById(prefix+'_m'), yEl = document.getElementById(prefix+'_y');
+  if(!ddmmyyyy){ dEl.value=''; mEl.value=''; yEl.value=''; return; }
+  const parts = ddmmyyyy.split('.');
+  dEl.value = parts[0]||''; mEl.value = parts[1]||''; yEl.value = parts[2]||'';
+}
+function wireSegDate(prefix, hiddenId){
+  const dEl = document.getElementById(prefix+'_d'), mEl = document.getElementById(prefix+'_m'), yEl = document.getElementById(prefix+'_y');
+  const hidden = document.getElementById(hiddenId);
+  const sync = ()=>{
+    hidden.value = getSegDateValue(prefix);
+    hidden.dispatchEvent(new Event('input', {bubbles:true}));
+  };
+  wireSegment(dEl, 2, mEl, null, sync);
+  wireSegment(mEl, 2, yEl, dEl, sync);
+  wireSegment(yEl, 4, null, mEl, sync);
+}
+function getSegTimeValue(prefix, minSuffix){
+  const h = document.getElementById(prefix+'_h').value;
+  const m = document.getElementById(prefix+(minSuffix||'_mi')).value;
+  return (h.length===2 && m.length===2) ? (h+':'+m) : '';
+}
+function setSegTimeValue(prefix, hhmm, minSuffix){
+  const hEl = document.getElementById(prefix+'_h'), mEl = document.getElementById(prefix+(minSuffix||'_mi'));
+  if(!hhmm){ hEl.value=''; mEl.value=''; return; }
+  const parts = hhmm.split(':');
+  hEl.value = parts[0]||''; mEl.value = parts[1]||'';
+}
+function wireSegTime(prefix, hiddenId, minSuffix){
+  const hEl = document.getElementById(prefix+'_h'), mEl = document.getElementById(prefix+(minSuffix||'_mi'));
+  const hidden = document.getElementById(hiddenId);
+  const sync = ()=>{
+    hidden.value = getSegTimeValue(prefix, minSuffix);
+    hidden.dispatchEvent(new Event('input', {bubbles:true}));
+    hidden.dispatchEvent(new Event('change', {bubbles:true}));
+  };
+  wireSegment(hEl, 2, mEl, null, sync);
+  wireSegment(mEl, 2, null, hEl, sync);
+}
+wireSegDate('fdate', 'fdate');
+wireSegTime('fstart', 'fstart');
+wireSegTime('fend', 'fend');
+wireSegTime('planStart', 'planStart');
+wireSegTime('reminderTime', 'reminderTime');
+
+/* Хабарлама/жоспар сияқты жерлерде hidden өріске бағдарламалық түрде
+   мән қойылғанда (мысалы, «Өңдеу» батырмасы), сегменттерді де сол
+   мәнмен толтырып отыратын көмекші: */
+function setDateFieldAndSegments(iso_or_ddmmyyyy, isISO){
+  const ddmmyyyy = isISO ? isoToDate(iso_or_ddmmyyyy) : iso_or_ddmmyyyy;
+  document.getElementById('fdate').value = ddmmyyyy;
+  setSegDateValue('fdate', ddmmyyyy);
+}
+function setTimeFieldAndSegments(prefix, hhmm){
+  document.getElementById(prefix).value = hhmm;
+  const minSuffix = (prefix==='fstart'||prefix==='fend') ? '_mi' : '_mi';
+  setSegTimeValue(prefix, hhmm, minSuffix);
+}
+
+
 /* ================= CALCULATION ================= */
+function getBreakMin(e, n){
+  const key = 'break'+n+'min';
+  if(e[key]!==undefined && e[key]!==null) return Number(e[key])||0;
+  // ескі деректермен үйлесімділік (бұрын тек 30 минуттық checkbox болатын)
+  return e['break'+n] ? 30 : 0;
+}
 function calcEntry(e){
   let startMin = timeToMinutes(e.start);
   let endMin = timeToMinutes(e.end);
@@ -905,8 +1048,9 @@ function calcEntry(e){
   let dayMin = Math.max(0, Math.min(endMin, nightThreshold) - startMin);
   let nightMin = Math.max(0, endMin - Math.max(startMin, nightThreshold));
   let breakBeforeMin = 0, breakAfterMin = 0;
-  if(e.break1){ if(e.break1time==='after') breakAfterMin += 30; else breakBeforeMin += 30; }
-  if(e.break2){ if(e.break2time==='after') breakAfterMin += 30; else breakBeforeMin += 30; }
+  const b1 = getBreakMin(e,1), b2 = getBreakMin(e,2);
+  if(b1>0){ if(e.break1time==='after') breakAfterMin += b1; else breakBeforeMin += b1; }
+  if(b2>0){ if(e.break2time==='after') breakAfterMin += b2; else breakBeforeMin += b2; }
   const breakMin = breakBeforeMin + breakAfterMin;
   const dayMinPaid = Math.max(0, dayMin - breakBeforeMin);
   const nightMinPaid = Math.max(0, nightMin - breakAfterMin);
@@ -969,13 +1113,6 @@ function updateGoalUI(totalPay){
   const namePart = goalName ? (goalName+' — ') : '';
   label.textContent = namePart+fmt(totalPay)+' ₸ / '+fmt(goal)+' ₸ ('+pct.toFixed(0)+'%)';
 }
-function updateTaxSub(totalPay){
-  const el = document.getElementById('taxSub');
-  if(!el) return;
-  if(!taxRate || taxRate<=0){ el.textContent = ''; return; }
-  const afterTax = totalPay * (1 - taxRate/100);
-  el.textContent = t('tax_sub_prefix') + fmt(afterTax) + ' ₸';
-}
 function updatePlan(totalPay){
   const box = document.getElementById('planResult');
   if(!goal || goal<=0){ box.innerHTML = t('plan_no_goal'); return; }
@@ -986,15 +1123,44 @@ function updatePlan(totalPay){
   const start = validTime(startRaw) ? startRaw : '09:00';
   const startMin = timeToMinutes(start);
   const endMin = startMin + hours*60;
-  const fakeEntry = { start: start, end: minutesToTime(endMin), break1:false, break2:false };
+  const fakeEntry = { start: start, end: minutesToTime(endMin), break1min:0, break2min:0 };
   const c = calcEntry(fakeEntry);
   const payPerShift = c.pay;
   if(payPerShift<=0){ box.innerHTML = t('plan_bad_time'); return; }
-  const shiftsNeeded = Math.ceil(remaining / payPerShift);
-  const totalHoursNeeded = shiftsNeeded * hours;
+
   const dim = daysInMonth(viewYear, viewMonth);
   const isCurrentMonth = (viewYear===today.getFullYear() && viewMonth===today.getMonth());
   const daysLeftInMonth = isCurrentMonth ? (dim - today.getDate() + 1) : dim;
+
+  // нақты керек сағат саны (осы смена үлгісінің орташа ставкасы бойынша)
+  const hourlyRate = payPerShift / hours;
+  const preciseHoursNeeded = remaining / hourlyRate;
+
+  // қалған күндерге, әр күнге ең көбі "hours" сағаттан бөліп, күн-күнмен жоспар құру
+  const dayPlan = [];
+  let left = preciseHoursNeeded;
+  let dayIdx = 0;
+  while(left > 0.05 && dayIdx < daysLeftInMonth && dayIdx < 3){
+    const h = Math.min(hours, left);
+    dayPlan.push(Math.ceil(h));
+    left -= h;
+    dayIdx++;
+  }
+
+  const shiftsNeeded = Math.ceil(preciseHoursNeeded / hours);
+  const totalHoursNeeded = Math.ceil(preciseHoursNeeded);
+
+  if(left <= 0.05 && dayPlan.length <= 3){
+    // мақсат 1-3 күнде жетімді — нақты күн-күнмен ұсыныс беру
+    const dayLabels = [t('plan_day1'), t('plan_day2'), t('plan_day3')];
+    const parts = dayPlan.map((h,i)=> dayLabels[i]+' '+h+t('plan_smart_h'));
+    box.innerHTML =
+      t('plan_smart_intro')+'<span class="hl">'+totalHoursNeeded+'</span>'+t('plan_smart_hours')+
+      '<span class="hl2">'+parts.join(t('plan_smart_join'))+'</span>'+t('plan_smart_end');
+    return;
+  }
+
+  // алыс мақсат — жалпы қорытынды түрінде көрсету
   let warn = '';
   if(shiftsNeeded > daysLeftInMonth){
     warn = '<div class="warn" style="margin-top:8px;">'+t('plan_warn')+daysLeftInMonth+t('plan_warn2')+'</div>';
@@ -1074,7 +1240,6 @@ function render(){
   document.getElementById('sumDay').textContent = fmtH(totalDay)+' сағ';
   document.getElementById('sumNight').textContent = fmtH(totalNight)+' сағ';
   updateGoalUI(totalPay);
-  updateTaxSub(totalPay);
   updatePlan(totalPay);
   drawChart(monthEntries);
  }catch(err){
@@ -1115,7 +1280,6 @@ function subscribeSettings(){
     NIGHT_HOUR = data.nightHour!==undefined ? data.nightHour : 22;
     goal = data.goal || 0;
     goalName = data.goalName || '';
-    taxRate = data.taxRate!==undefined ? data.taxRate : 10;
     paydayDay = data.payday || null;
 
     document.getElementById('rDay').value = DAY_RATE;
@@ -1123,13 +1287,14 @@ function subscribeSettings(){
     document.getElementById('rHour').value = NIGHT_HOUR;
     document.getElementById('goalInput').value = goal || '';
     document.getElementById('goalName').value = goalName;
-    document.getElementById('taxRateInput').value = taxRate;
     document.getElementById('paydayInput').value = paydayDay || '';
 
     document.getElementById('reminderEnabled').checked = !!data.reminderEnabled;
     document.getElementById('reminderTime').value = data.reminderTime || '20:00';
+    setSegTimeValue('reminderTime', document.getElementById('reminderTime').value);
     if(data.planHours) document.getElementById('planHours').value = data.planHours;
     document.getElementById('planStart').value = data.planStart || '09:00';
+    setSegTimeValue('planStart', document.getElementById('planStart').value);
 
     updateRateLabels();
     updatePaydayCountdown(paydayDay);
@@ -1168,12 +1333,12 @@ function saveDraft(){
     date: document.getElementById('fdate').value,
     start: document.getElementById('fstart').value,
     end: document.getElementById('fend').value,
-    break1: document.getElementById('fbreak1').checked,
+    break1min: document.getElementById('fbreak1min').value,
     break1time: document.getElementById('fbreak1time').value,
-    break2: document.getElementById('fbreak2').checked,
+    break2min: document.getElementById('fbreak2min').value,
     break2time: document.getElementById('fbreak2time').value,
   };
-  const isEmpty = !draft.date && !draft.start && !draft.end && !draft.break1 && !draft.break2;
+  const isEmpty = !draft.date && !draft.start && !draft.end && draft.break1min==='0' && draft.break2min==='0';
   try{
     if(isEmpty) localStorage.removeItem(draftKey());
     else localStorage.setItem(draftKey(), JSON.stringify(draft));
@@ -1185,21 +1350,24 @@ function restoreDraft(){
     if(!raw) return;
     const d = JSON.parse(raw);
     document.getElementById('fdate').value = d.date || '';
+    setSegDateValue('fdate', d.date || '');
     document.getElementById('fstart').value = d.start || '';
+    setSegTimeValue('fstart', d.start || '');
     document.getElementById('fend').value = d.end || '';
-    document.getElementById('fbreak1').checked = !!d.break1;
+    setSegTimeValue('fend', d.end || '');
+    document.getElementById('fbreak1min').value = d.break1min || '0';
     document.getElementById('fbreak1time').value = d.break1time || 'before';
-    document.getElementById('fbreak1time').disabled = !d.break1;
-    document.getElementById('fbreak2').checked = !!d.break2;
+    document.getElementById('fbreak1time').disabled = (d.break1min||'0')==='0';
+    document.getElementById('fbreak2min').value = d.break2min || '0';
     document.getElementById('fbreak2time').value = d.break2time || 'before';
-    document.getElementById('fbreak2time').disabled = !d.break2;
+    document.getElementById('fbreak2time').disabled = (d.break2min||'0')==='0';
   }catch(err){}
 }
 function clearDraft(){ try{ localStorage.removeItem(draftKey()); }catch(err){} }
 ['fdate','fstart','fend'].forEach(id=>{
   document.getElementById(id).addEventListener('input', saveDraft);
 });
-['fbreak1','fbreak1time','fbreak2','fbreak2time'].forEach(id=>{
+['fbreak1min','fbreak1time','fbreak2min','fbreak2time'].forEach(id=>{
   document.getElementById(id).addEventListener('change', saveDraft);
 });
 
@@ -1242,14 +1410,18 @@ function startEdit(id){
   if(!e) return;
   editingId = id;
   document.getElementById('fdate').value = isoToDate(e.date);
+  setSegDateValue('fdate', isoToDate(e.date));
   document.getElementById('fstart').value = e.start;
+  setSegTimeValue('fstart', e.start);
   document.getElementById('fend').value = e.end;
-  document.getElementById('fbreak1').checked = !!e.break1;
+  setSegTimeValue('fend', e.end);
+  const b1 = getBreakMin(e,1), b2 = getBreakMin(e,2);
+  document.getElementById('fbreak1min').value = String(b1);
   document.getElementById('fbreak1time').value = e.break1time || 'before';
-  document.getElementById('fbreak1time').disabled = !e.break1;
-  document.getElementById('fbreak2').checked = !!e.break2;
+  document.getElementById('fbreak1time').disabled = b1===0;
+  document.getElementById('fbreak2min').value = String(b2);
   document.getElementById('fbreak2time').value = e.break2time || 'before';
-  document.getElementById('fbreak2time').disabled = !e.break2;
+  document.getElementById('fbreak2time').disabled = b2===0;
   document.getElementById('saveBtn').textContent = t('save_btn_edit');
   document.getElementById('cancelEditBtn').style.display = 'inline-block';
   window.scrollTo({top:0, behavior:'smooth'});
@@ -1258,10 +1430,13 @@ window.startEdit = startEdit;
 
 function resetForm(){
   document.getElementById('fdate').value = '';
+  setSegDateValue('fdate', '');
   document.getElementById('fstart').value = '';
+  setSegTimeValue('fstart', '');
   document.getElementById('fend').value = '';
-  document.getElementById('fbreak1').checked = false;
-  document.getElementById('fbreak2').checked = false;
+  setSegTimeValue('fend', '');
+  document.getElementById('fbreak1min').value = '0';
+  document.getElementById('fbreak2min').value = '0';
   document.getElementById('fbreak1time').disabled = true;
   document.getElementById('fbreak2time').disabled = true;
   clearDraft();
@@ -1296,9 +1471,9 @@ document.getElementById('saveBtn').addEventListener('click', async function(){
 
   const data = {
     date: iso, start, end,
-    break1: document.getElementById('fbreak1').checked,
+    break1min: Number(document.getElementById('fbreak1min').value),
     break1time: document.getElementById('fbreak1time').value,
-    break2: document.getElementById('fbreak2').checked,
+    break2min: Number(document.getElementById('fbreak2min').value),
     break2time: document.getElementById('fbreak2time').value,
   };
 
@@ -1320,14 +1495,14 @@ document.getElementById('saveBtn').addEventListener('click', async function(){
   render();
 });
 
-function syncBreakSelect(cbId, selId){
-  const cb = document.getElementById(cbId);
-  const sel = document.getElementById(selId);
-  sel.disabled = !cb.checked;
-  cb.addEventListener('change', ()=> sel.disabled = !cb.checked);
+function syncBreakSelect(minId, selId){
+  const minSel = document.getElementById(minId);
+  const timeSel = document.getElementById(selId);
+  timeSel.disabled = (minSel.value==='0');
+  minSel.addEventListener('change', ()=> timeSel.disabled = (minSel.value==='0'));
 }
-syncBreakSelect('fbreak1','fbreak1time');
-syncBreakSelect('fbreak2','fbreak2time');
+syncBreakSelect('fbreak1min','fbreak1time');
+syncBreakSelect('fbreak2min','fbreak2time');
 
 /* ================= LIVE TIMER (Start / Stop) ================= */
 let timerInterval = null;
@@ -1368,12 +1543,15 @@ document.getElementById('timerStopBtn').addEventListener('click', ()=>{
   const startMs = raw ? Number(raw) : Date.now();
   const startD = new Date(startMs);
   const endD = new Date();
-  document.getElementById('fdate').value =
-    String(startD.getDate()).padStart(2,'0')+'.'+String(startD.getMonth()+1).padStart(2,'0')+'.'+startD.getFullYear();
-  document.getElementById('fstart').value =
-    String(startD.getHours()).padStart(2,'0')+':'+String(startD.getMinutes()).padStart(2,'0');
-  document.getElementById('fend').value =
-    String(endD.getHours()).padStart(2,'0')+':'+String(endD.getMinutes()).padStart(2,'0');
+  const dateVal = String(startD.getDate()).padStart(2,'0')+'.'+String(startD.getMonth()+1).padStart(2,'0')+'.'+startD.getFullYear();
+  const startVal = String(startD.getHours()).padStart(2,'0')+':'+String(startD.getMinutes()).padStart(2,'0');
+  const endVal = String(endD.getHours()).padStart(2,'0')+':'+String(endD.getMinutes()).padStart(2,'0');
+  document.getElementById('fdate').value = dateVal;
+  setSegDateValue('fdate', dateVal);
+  document.getElementById('fstart').value = startVal;
+  setSegTimeValue('fstart', startVal);
+  document.getElementById('fend').value = endVal;
+  setSegTimeValue('fend', endVal);
   try{ localStorage.removeItem(timerKey()); }catch(err){}
   stopTimerUI();
   saveDraft();
@@ -1418,13 +1596,6 @@ document.getElementById('goalSaveBtn').addEventListener('click', ()=>{
   goal = isNaN(v) ? 0 : v;
   goalName = document.getElementById('goalName').value.trim();
   saveSettings({ goal, goalName });
-  render();
-});
-
-document.getElementById('taxSaveBtn').addEventListener('click', ()=>{
-  const v = Number(document.getElementById('taxRateInput').value);
-  taxRate = (v>=0 && v<=50) ? v : 10;
-  saveSettings({ taxRate });
   render();
 });
 
@@ -1548,11 +1719,6 @@ document.getElementById('pdfBtn').addEventListener('click', ()=>{
     docPdf.setFont(undefined, 'bold');
     docPdf.text(t('xlsx_total')+' '+fmt(Math.round(totalPay))+' ₸', 142, y);
     docPdf.setFont(undefined, 'normal');
-    if(taxRate>0){
-      y += 8;
-      docPdf.setFontSize(9);
-      docPdf.text(t('tax_sub_prefix')+fmt(Math.round(totalPay*(1-taxRate/100)))+' ₸', 14, y);
-    }
     docPdf.save('workpay_'+ymKey(viewYear,viewMonth)+'.pdf');
   }catch(err){
     alert(t('err_generic'));
@@ -1607,8 +1773,8 @@ document.getElementById('importFile').addEventListener('change', (ev)=>{
         const id = Date.now().toString(36)+Math.random().toString(36).slice(2,6)+i;
         await saveEntryToDb({
           id, date: iso, start, end,
-          break1: breakMin>0, break1time:'before',
-          break2: breakMin>30, break2time:'after'
+          break1min: Math.min(breakMin, 60), break1time:'before',
+          break2min: Math.max(0, breakMin-60), break2time:'after'
         });
         imported++;
       }
@@ -1711,8 +1877,9 @@ onAuthStateChanged(auth, (user)=>{
     resumeTimerIfRunning();
     if(!document.getElementById('fdate').value){
       const d = new Date();
-      document.getElementById('fdate').value =
-        String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+      const todayVal = String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+      document.getElementById('fdate').value = todayVal;
+      setSegDateValue('fdate', todayVal);
     }
   } else {
     currentUid = null;
